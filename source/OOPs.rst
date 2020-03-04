@@ -42,7 +42,16 @@ Therefore, it is also known as *data hiding*.
 Inheritance
 ***********
 
-Inheritance
+Inheritance is a concept of inheriting the properties of base class to derived class.
+It hepls us to reuse existing functionality and extend the functionality based on new requirement.
+
+**Types of Inheritance**
+    - Single -> one base class and one derived class
+    - Hierarchical -> multiple classes derived from one base class
+    - Multi Level -> one class is derived from another derived class
+    - Multiple (Interface) -> C# does not support multiple inheritances of classes. To overcome this problem we use interfaces.
+
+Note : If don't want other classes to inherit from a class, use the sealed keyword
 
 *************
 Polymorphism

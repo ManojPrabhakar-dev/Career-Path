@@ -1,5 +1,6 @@
 {
     "restructuredtext.linter.executablePath": "PathToExecutable",
     "restructuredtext.linter.run": "onType",
-    "restructuredtext.languageServer.disabled": false
+    "restructuredtext.languageServer.disabled": false,
+    "restructuredtext.confPath": "${workspaceFolder}"
 }
