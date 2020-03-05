@@ -13,11 +13,13 @@ Data Binding
 
 About Data Binding
 
-***************
-Builder Pattern
-***************
+*********
+Templates
+*********
 
-About Builder Pattern
+About Control template and data template
+
+Reference : `Template blog <https://www.c-sharpcorner.com/article/different-types-of-templates-in-wpf/>`_
 
 *********
 Resources
