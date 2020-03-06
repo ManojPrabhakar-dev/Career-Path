@@ -90,6 +90,7 @@ It can be achieved by using method overloading and it is also called **early bin
             }
         }
 
+
 **RunTime or Dynamic Polymorphism** means overriding a base class method in the derived class by creating a similar function and 
 this can be achieved by implementing **abstract** classes and **virtual** functions along with **inheritance** principle.
 
@@ -145,6 +146,7 @@ At runtime, it will be decided which method to call and if there is no method at
             The animal makes a sound
             The pig says: wee wee
             The dog says: bow wow
+
 
 .. code-block:: c#
     :caption: Method Overriding code example with **Abstract** class.
