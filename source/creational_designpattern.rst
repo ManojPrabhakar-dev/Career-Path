@@ -36,7 +36,7 @@ Factory Pattern
 
 we create an object without exposing the creation logic to the client and the client will refer to the newly created object using a common interface.
 
-*Where to use Factory design Pattern ?*
+**Where to use Factory design Pattern ?**
 
 If we have a superclass and n number of subclasses, and based on the data provided, if we have to create and return the object of one of the subclasses, 
 then we need to use the factory design pattern.
@@ -49,3 +49,29 @@ then we need to use the factory design pattern.
 
 If we need to add any new product then we need to add a new if else condition in the object creation method of the Factory class. This violates the **open/closed** design principle.
 We also have a tight coupling between the Factory class and product classes.
+
+Reference : `Factory Design Pattern blog <https://dotnettutorials.net/lesson/factory-design-pattern-csharp/>`_
+
+**********************
+Factory Method Pattern
+**********************
+
+The Factory Method Design Pattern is used, when we need to create the object without exposing the object creation logic to the client. 
+To achieve this, in the factory method design pattern, we will create an abstract class as the Factory class which will create and return the instance of the product, but 
+it will let the subclasses decide which class to instantiate.
+
+.. image:: images/FactoryMethodPattern.png
+   :width: 700
+
+According to Gang of Four, we need to define an interface or abstract class for creating an object. In our example, it is an abstract class i.e. CreditCardFactory class. 
+
+The second part of the definition saying that let the subclasses decide which class to instantiate. In our example, the subclasses are PlatinumFactory, MoneyBackFactory, and TitaniumFactory. 
+
+So these subclasses will decide which class to instantiate, for example, MoneyBack, Titanium, and Platinum.
+
+Reference : `Factory Method Design Pattern blog <https://dotnettutorials.net/lesson/factory-method-design-pattern-csharp/>`_
+
+************************
+Abstract Factory Pattern
+************************
+
