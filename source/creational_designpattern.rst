@@ -75,3 +75,19 @@ Reference : `Factory Method Design Pattern blog <https://dotnettutorials.net/les
 Abstract Factory Pattern
 ************************
 
+The Abstract Factory Design Pattern provides a way to encapsulate a group of individual factories that have a common theme without specifying their concrete classes.
+
+Abstract Factory is a super factory that creates other factories. This Factory is also called Factory of Factories.
+
+When to use it Abstract Factory Design Pattern?
+
+* When you want to create a set of related objects or dependent objects which must be used together.
+* When the system should configure to work with multiple families of products.
+* When the Concrete classes should be decoupled from the clients.
+
+Abstract Factory Design Pattern adds a layer of abstraction to the Factory Method Design Pattern
+
+Reference : `Abstract Factory Design Pattern blog <https://dotnettutorials.net/lesson/abstract-factory-design-pattern-csharp/>`_
+
+
+
