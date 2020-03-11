@@ -203,6 +203,9 @@ Let us see how to clone the object to another object. To do so, C# provides one 
 * MemberwiseClone Method only copies the non-static fields of the object to the new object
 * In the process of copying, if a field is a value type, a bit by bit copy of the field is performed. If a field is a reference type, the reference is copied but the referenced object is not.
 
+Reference : `Prototype Design Pattern blog <https://dotnettutorials.net/lesson/prototype-design-pattern/>`_
+
+
 **Shallow Copy Vs Deep Copy**
 
 **Understanding Shallow Copy in C#:**
@@ -221,3 +224,121 @@ If the field is a value type, then a bit-by-bit copy of the field will be perfor
 
 .. image:: images/DeepCopy.png
    :width: 700
+
+Reference : `Shallow Copy Vs Deep Copy blog <https://dotnettutorials.net/lesson/shallow-copy-and-deep-copy/>`_
+
+******************
+Singleton Pattern
+******************
+
+Singleton Design Pattern ensures that only one instance of a particular class is going to be created and 
+then provide simple point of access to that instance for the entire application.
+
+Identification: Singleton can be recognized by a static creation method, which returns the same cached object.
+
+
+.. code-block:: c#
+   :caption: **No Thread-Safe** Singleton Design Pattern code example
+
+      namespace SingletonDemo
+      {
+         public sealed class Singleton
+         {
+            private static int counter = 0;
+            private static Singleton instance = null;
+            public static Singleton GetInstance
+            {
+                  get
+                  {
+                     if (instance == null)
+                        instance = new Singleton();
+                     return instance;
+                  }
+            }
+            
+            private Singleton()
+            {
+                  counter++;
+                  Console.WriteLine("Counter Value " + counter.ToString());
+            }
+            public void PrintDetails(string message)
+            {
+                  Console.WriteLine(message);
+            }
+         }
+      }
+
+**Thread-safe Singleton Design Pattern**
+
+The lazy initialization i.e. the on-demand object creation of the singleton class works fine when we invoke the GetInstance property in a Single-threaded environment. 
+But in a multi-thread environment, the lazy initialization may end up creating multiple instances of the singleton class when multiple threads invoke the GetInstance property parallelly at the same time.
+
+We can use Locks in C# to control the thread race condition in a multithreaded environment.
+
+
+.. code-block:: c#
+   :caption: **Thread-Safe Multi-Threaded** Singleton Design Pattern code example
+
+      namespace SingletonDemo
+      {
+         public sealed class Singleton
+         {
+            private static int counter = 0;
+            private static readonly object Instancelock = new object();
+            private Singleton()
+            {
+                  counter++;
+                  Console.WriteLine("Counter Value " + counter.ToString());
+            }
+            private static Singleton instance = null;
+            
+            public static Singleton GetInstance
+            {
+                  get
+                  {
+                     lock (Instancelock)
+                     {
+                        if (instance == null)
+                        {
+                              instance = new Singleton();
+                        }
+                        return instance;
+                     }
+                  }
+            }
+            
+            public void PrintDetails(string message)
+            {
+                  Console.WriteLine(message);
+            }
+         }
+      }
+
+The above code implementation using lock solves the multithreading issue. But the problem is that it is slow down your application as only one thread can access the GetInstance property at any given point of time. 
+We can overcome the above problem by using the **Double-checked locking** mechanism.
+
+In the Double-checked locking mechanism, first, we will check whether the instance is created or not. 
+If not then only we will synchronize the method as shown below.
+
+.. code-block:: c#
+   :caption: **Double-checked locking** Singleton Design Pattern code example
+
+      public static Singleton GetInstance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    lock (Instancelock)
+                    {
+                        if (instance == null)
+                        {
+                            instance = new Singleton();
+                        }
+                    }
+                }
+                return instance;
+            }
+        }
+
+
