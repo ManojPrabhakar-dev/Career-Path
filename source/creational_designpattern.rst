@@ -23,7 +23,100 @@ The Creational Design Pattern helps us to centralize the object creation logic.
 Builder Pattern
 ***************
 
-About Builder Pattern
+The Builder Design Pattern builds a complex object using many simple objects and using a step by step approach.
+
+The Process of constructing a complex object should be generic so that the same construction process can be used to create different representations of the same complex object.
+
+It’s especially useful when you need to create an object with lots of possible configuration options.
+
+Without this pattern, we can end up with a large constructor to provide all the required parameters for constructing our object. That could lead to quite unreadable and hardly maintainable code. 
+Furthermore, a constructor with lots of parameters has a downside to it. We won’t need to use all the parameters, all the time.
+
+**Identification**
+
+The Builder pattern can be recognized in class, which has a single creation method and several methods to configure the resulting object. 
+Builder methods often support chaining (for example, someBuilder->setValueA(1)->setValueB(2)->create()).
+
+.. image:: images/BuilderPattern_UML.png
+   :width: 700
+
+Reference_1 : `Builder Design Pattern blog 1 <https://dotnettutorials.net/lesson/builder-design-pattern/>`_
+
+Reference_2 : `Builder Design Pattern blog 2 <https://refactoring.guru/design-patterns/builder/csharp/example>`_
+
+*************************
+Fluent Interface Pattern
+*************************
+
+The main objective of the Fluent Interface Design Pattern is that we can apply multiple properties (or methods) to an object by connecting them with dots (.) without having to re-specify the object name each time.
+
+Its makes our interface simpler.
+
+**Note:** The Fluent Interfaces and Method chaining are related to each other. Or we can say that one is a concept and the other one is its implementation.
+
+Fluent interfaces are used extensively in LINQ Queries like Searching, Sorting, pagination, grouping etc
+
+.. code-block:: c#
+   :caption: Fluent Interface code example
+
+      using System;
+
+      namespace FluentInterfaceDesignPattern
+      {
+         class Program
+         {
+            static void Main(string[] args)
+            {
+                  FluentEmployee obj = new FluentEmployee();
+
+                  obj.NameOfTheEmployee("Anurag Mohanty")
+                        .Born("10/10/1992")
+                        .WorkingOn("IT")
+                        .StaysAt("Mumbai-India");
+                  
+                  Console.Read();
+            }
+         }
+
+         public class Employee
+         {
+            public string FullName { get; set; }
+            public DateTime DateOfBirth { get; set; }
+            public string Department { get; set; }
+            public string Address { get; set; }
+         }
+
+         public class FluentEmployee
+         {
+            private Employee employee = new Employee();
+
+            public FluentEmployee NameOfTheEmployee(string FullName)
+            {
+                  employee.FullName = FullName;
+                  return this;
+            }
+
+            public FluentEmployee Born(string DateOfBirth)
+            {
+                  employee.DateOfBirth = Convert.ToDateTime(DateOfBirth);
+                  return this;
+            }
+
+            public FluentEmployee WorkingOn(string Department)
+            {
+                  employee.Department = Department;
+                  return this;
+            }
+
+            public FluentEmployee StaysAt(string Address)
+            {
+                  employee.Address = Address;
+                  return this;
+            }
+         }
+      }
+
+Reference : `Fluent Interface Pattern blog <https://dotnettutorials.net/lesson/fluent-interface-design-pattern/>`_
 
 ***************
 Factory Pattern
@@ -90,4 +183,41 @@ Abstract Factory Design Pattern adds a layer of abstraction to the Factory Metho
 Reference : `Abstract Factory Design Pattern blog <https://dotnettutorials.net/lesson/abstract-factory-design-pattern-csharp/>`_
 
 
+******************
+Prototype Pattern
+******************
 
+Prototype Design Pattern gives us a way to create new objects from the existing instance of the object. 
+
+That means it clone the existing object with its data into a new object. If we do any changes to the cloned object (i.e. new object) then it does not affect the original object.
+
+When we talk about object cloning it means it is all about the call by value. So, if we do any changes to one object then it will not affect the other object. 
+Let us see how to clone the object to another object. To do so, C# provides one method i.e. **MemberwiseClone** which will create a new complete copy of the object.
+
+.. image:: images/Prototype_Pattern_1.png
+   :width: 700
+
+**Points to Remember:**
+
+* The MemberwiseClone method is part of the System.Object class and it creates a **shallow copy** of the given object. 
+* MemberwiseClone Method only copies the non-static fields of the object to the new object
+* In the process of copying, if a field is a value type, a bit by bit copy of the field is performed. If a field is a reference type, the reference is copied but the referenced object is not.
+
+**Shallow Copy Vs Deep Copy**
+
+**Understanding Shallow Copy in C#:**
+
+In the case of **Shallow copy**, it will create the new object from the existing object and then copying the **value type fields** of the current object to the new object. 
+But in the case of reference type, it will only copy the reference, not the referred object itself. 
+Therefore the original and clone refer to the same object in case of reference type.
+
+.. image:: images/ShallowCopy.png
+   :width: 700
+
+**Understanding Deep Copy in C#:**
+
+In the case of **deep copy**, it will create the new object from the existing object and then copying the **fields** of the current object to the newly created object. 
+If the field is a value type, then a bit-by-bit copy of the field will be performed. If the field is a reference type, then a new copy of the referred object is created.
+
+.. image:: images/DeepCopy.png
+   :width: 700
