@@ -317,7 +317,7 @@ We can use Locks in C# to control the thread race condition in a multithreaded e
 The above code implementation using lock solves the multithreading issue. But the problem is that it is slow down your application as only one thread can access the GetInstance property at any given point of time. 
 We can overcome the above problem by using the **Double-checked locking** mechanism.
 
-In the Double-checked locking mechanism, first, we will check whether the instance is created or not. 
+In the **Double-checked locking** mechanism, first, we will check whether the instance is created or not. 
 If not then only we will synchronize the method as shown below.
 
 .. code-block:: c#
@@ -341,4 +341,54 @@ If not then only we will synchronize the method as shown below.
             }
         }
 
+
+**What is Non-Lazy or Eager Loading in C# ?**
+
+The Eager loading in singleton design pattern is nothing a process in which we need to initialize the singleton object at the **time of application start-up** rather than on-demand and keep it ready in memory to be used in the future. 
+
+The advantage of using Eager Loading in the Singleton design pattern is that the CLR (Common Language Runtime) will take care of object initialization and thread-safety.
+
+.. code-block:: c#
+   :caption: **Non-Lazy or Eager Loading** Singleton Design Pattern code example
+
+      private static readonly Singleton singleInstance = new Singleton(); 
+        
+        public static Singleton GetInstance
+        {
+            get
+            {
+                return singleInstance;
+            }
+        }
+
+**What is Lazy or Deferred Loading in C# ?**
+
+The Lazy or Deferred Loading is a design pattern or you can say its a concept which is commonly used to delay the initialization of an object until the point at which it is needed. 
+So the main objective of Lazy loading is to load the object on-demand or you can say object when needed.
+
+**When to use Lazy Loading ?**
+
+* When the cost of the object creation is very high as well as the use of that object is very rare. 
+
+* The lazy loading improves the performance of an application if it is used properly. 
+
+
+We can use the Lazy keyword to make the singleton instance as lazy loading as below,
+
+
+.. code-block:: c#
+   :caption: **Lazy keyword** Singleton Design Pattern code example
+
+      // We need to pass a delegate to the constructor which calls the Singleton constructor, 
+         which is done most easily with a lambda expression.
+
+      private static readonly Lazy<Singleton> Instancelock = new Lazy<Singleton>(() => new Singleton());
+
+        public static Singleton GetInstance
+        {
+            get
+            {
+                return Instancelock.Value;
+            }
+        }
 
