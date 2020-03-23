@@ -515,4 +515,383 @@ The classes and objects participating in this pattern are:
 Template Pattern
 ****************
 
-About Template Pattern
+**Template Method Design Pattern** defines a sequence of steps of an algorithm and allows the subclasses to override the steps but not allowed to change the sequence.
+
+The Key to this Pattern is that we put the general logic in the abstract parent class and let the child classes define the specifics.
+
+* Used to get rid of the code duplication, leaving the algorithm structure intact
+
+* Used to eliminate the conditionals in client code and use polymorphism when calling methods on a processing object.
+
+
+.. image:: images/TemplatePattern_1.png
+   :width: 700
+
+.. code-block:: c#
+    :caption: Template Pattern code example
+
+        public abstract class HouseTemplate
+        {
+            // Template method defines the sequence for building a house
+            public void BuildHouse()
+            {
+                BuildFoundation();
+                BuildPillars();
+                BuildWalls();
+                BuildWindows();
+                Console.WriteLine("House is built");
+            }
+            // Methods to be implemented by subclasses
+            protected abstract void BuildFoundation();
+            protected abstract void BuildPillars();
+            protected abstract void BuildWalls();
+            protected abstract void BuildWindows();
+        }
+
+        public class ConcreteHouse : HouseTemplate
+        {
+            protected override void BuildFoundation()
+            {
+                Console.WriteLine("Building foundation with cement, iron rods and sand");
+            }
+            protected override void BuildPillars()
+            {
+                Console.WriteLine("Building Concrete Pillars with Cement and Sand");
+            }
+            protected override void BuildWalls()
+            {
+                Console.WriteLine("Building Concrete Walls");
+            }
+            protected override void BuildWindows()
+            {
+                Console.WriteLine("Building Concrete Windows");
+            }
+        }
+
+        public class WoodenHouse : HouseTemplate
+        {
+            protected override void BuildFoundation()
+            {
+                Console.WriteLine("Building foundation with cement, iron rods, wood and sand");
+            }
+            protected override void BuildPillars()
+            {
+                Console.WriteLine("Building wood Pillars with wood coating");
+            }
+            protected override void BuildWalls()
+            {
+                Console.WriteLine("Building Wood Walls");
+            }
+            protected override void BuildWindows()
+            {
+                Console.WriteLine("Building Wood Windows");
+            }
+        }
+            
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Build a Concrete House\n");
+            HouseTemplate houseTemplate = new ConcreteHouse();
+            // call the template method
+            houseTemplate.BuildHouse();
+            Console.WriteLine();
+            Console.WriteLine("Build a Wooden House\n");
+            houseTemplate = new WoodenHouse();
+            // call the template method
+            houseTemplate.BuildHouse();
+            Console.Read();
+        }
+    
+
+***************
+Command Pattern
+***************
+
+**Command** is behavioral design pattern that converts *requests or simple operations* into objects.
+
+Command Design Pattern is used to encapsulate a request as an object (i.e. a command) and pass to an invoker, 
+wherein the invoker does now knows how to service the request but uses the encapsulated command to perform an action.
+
+.. image:: images/CommandPattern_1.png
+   :width: 700
+
+.. code-block:: c#
+    :caption: Command Pattern code example
+
+        using System;
+
+        namespace RefactoringGuru.DesignPatterns.Command.Conceptual
+        {
+            // The Command interface declares a method for executing a command.
+            public interface ICommand
+            {
+                void Execute();
+            }
+
+            // Some commands can implement simple operations on their own.
+            class SimpleCommand : ICommand
+            {
+                private string _payload = string.Empty;
+
+                public SimpleCommand(string payload)
+                {
+                    this._payload = payload;
+                }
+
+                public void Execute()
+                {
+                    Console.WriteLine("SimpleCommand: See, I can do simple things like printing ({this._payload})");
+                }
+            }
+
+            // However, some commands can delegate more complex operations to other
+            // objects, called "receivers."
+            class ComplexCommand : ICommand
+            {
+                private Receiver _receiver;
+
+                // Context data, required for launching the receiver's methods.
+                private string _a;
+
+                private string _b;
+
+                // Complex commands can accept one or several receiver objects along
+                // with any context data via the constructor.
+                public ComplexCommand(Receiver receiver, string a, string b)
+                {
+                    this._receiver = receiver;
+                    this._a = a;
+                    this._b = b;
+                }
+
+                // Commands can delegate to any methods of a receiver.
+                public void Execute()
+                {
+                    Console.WriteLine("ComplexCommand: Complex stuff should be done by a receiver object.");
+                    this._receiver.DoSomething(this._a);
+                    this._receiver.DoSomethingElse(this._b);
+                }
+            }
+
+            // The Receiver classes contain some important business logic. They know how
+            // to perform all kinds of operations, associated with carrying out a
+            // request. In fact, any class may serve as a Receiver.
+            class Receiver
+            {
+                public void DoSomething(string a)
+                {
+                    Console.WriteLine("Receiver: Working on ({a}.)");
+                }
+
+                public void DoSomethingElse(string b)
+                {
+                    Console.WriteLine("Receiver: Also working on ({b}.)");
+                }
+            }
+
+            // The Invoker is associated with one or several commands. It sends a
+            // request to the command.
+            class Invoker
+            {
+                private ICommand _onStart;
+
+                private ICommand _onFinish;
+
+                // Initialize commands.
+                public void SetOnStart(ICommand command)
+                {
+                    this._onStart = command;
+                }
+
+                public void SetOnFinish(ICommand command)
+                {
+                    this._onFinish = command;
+                }
+
+                // The Invoker does not depend on concrete command or receiver classes.
+                // The Invoker passes a request to a receiver indirectly, by executing a
+                // command.
+                public void DoSomethingImportant()
+                {
+                    Console.WriteLine("Invoker: Does anybody want something done before I begin?");
+                    if (this._onStart is ICommand)
+                    {
+                        this._onStart.Execute();
+                    }
+                    
+                    Console.WriteLine("Invoker: ...doing something really important...");
+                    
+                    Console.WriteLine("Invoker: Does anybody want something done after I finish?");
+                    if (this._onFinish is ICommand)
+                    {
+                        this._onFinish.Execute();
+                    }
+                }
+            }
+
+            class Program
+            {
+                static void Main(string[] args)
+                {
+                    // The client code can parameterize an invoker with any commands.
+                    Invoker invoker = new Invoker();
+                    invoker.SetOnStart(new SimpleCommand("Say Hi!"));
+                    Receiver receiver = new Receiver();
+                    invoker.SetOnFinish(new ComplexCommand(receiver, "Send email", "Save report"));
+
+                    invoker.DoSomethingImportant();
+                }
+            }
+        }
+
+**When to use Command Design Pattern in Real-time Application?**
+
+* When you need to create and execute requests at different times.
+
+* Sending requests to different receivers which can handle it in different ways.
+
+* When you need to implement callback functionality.
+
+* The source of the request should be decoupled from the object that actually handles the request.
+
+
+***************
+Visitor Pattern
+***************
+
+**Visitor Design Pattern**, we use a Visitor object which changes the executing algorithm of an element object.
+
+In this way, when the visitor varies, the execution algorithm of the element object can also vary.
+
+As per the Visitor Design Pattern, the element object has to accept the visitor object so that the visitor object handles the operation on the element object.
+
+
+.. image:: images/VisitorPattern_1.png
+   :width: 500
+
+.. code-block:: c#
+    :caption: Visitor Pattern code example
+
+        public interface IElement
+        {
+            void Accept(IVisitor visitor);
+        }
+
+        public class Kid : IElement
+        {
+            public string KidName { get; set; }
+            
+            public Kid(string name)
+            {
+                KidName = name;
+            }
+            
+            public void Accept(IVisitor visitor)
+            {
+                visitor.Visit(this);
+            }
+        }
+
+        public interface IVisitor
+        {
+            void Visit(IElement element);
+        }
+
+        public class Doctor : IVisitor
+        {
+            public string Name { get; set; }
+            public Doctor(string name)
+            {
+                Name = name;
+            }
+            
+            public void Visit(IElement element)
+            {
+                Kid kid = (Kid)element;
+                Console.WriteLine("Doctor: " + this.Name+ " did the health checkup of the child: "+ kid.KidName);
+            }
+        }
+
+        class Salesman : IVisitor
+        {
+            public string Name { get; set; }
+            public Salesman(string name)
+            {
+                Name = name;
+            }
+            public void Visit(IElement element)
+            {
+                Kid kid = (Kid)element;
+                Console.WriteLine("Salesman: " + this.Name + " gave the school bag to the child: "
+                                + kid.KidName);
+            }
+        }
+
+        public class School
+        {
+            private static List<IElement> elements;
+            static School()
+            {
+                elements = new List<IElement>
+                {
+                    new Kid("Ram"),
+                    new Kid("Sara"),
+                    new Kid("Pam")
+                };
+            }
+            public void PerformOperation(IVisitor visitor)
+            {
+                foreach (var kid in elements)
+                {
+                    kid.Accept(visitor);
+                }
+            }
+        }
+
+        class Program
+        {
+            static void Main(string[] args)
+            {
+                School school = new School();
+
+                var visitor1 = new Doctor("James");
+                school.PerformOperation(visitor1);
+                Console.WriteLine();
+
+                var visitor2 = new Salesman("John");
+                school.PerformOperation(visitor2);
+                Console.Read();
+            }
+        }
+
+**When to use Visitor Design Pattern in C#?**
+
+* An object structure must have many unrelated operations to perform on it.
+* An object structure cannot change but operations performed on it can change.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
