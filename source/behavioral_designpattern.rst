@@ -869,6 +869,539 @@ As per the Visitor Design Pattern, the element object has to accept the visitor 
 * An object structure must have many unrelated operations to perform on it.
 * An object structure cannot change but operations performed on it can change.
 
+****************
+Strategy Pattern
+****************
+
+**Strategy design pattern** that turns a set of behaviors into objects and makes them interchangeable inside original context object.
+
+The Strategy Design Pattern is used when we have multiple algorithms (solutions) for a specific task and the client decides the actual implementation to be used at runtime.
+
+
+.. image:: images/StrategyPattern_1.png
+   :width: 500
+
+.. image:: images/StrategyPattern_2.png
+   :width: 500
+
+
+.. code-block:: c#
+    :caption: Strategy Pattern code example
+
+        public interface ICompression
+        {
+            void CompressFolder(string compressedArchiveFileName);
+        }
+
+        public class ZipCompression : ICompression
+        {
+            public void CompressFolder(string compressedArchiveFileName)
+            {
+                Console.WriteLine("Folder is compressed using zip approach: '" + compressedArchiveFileName
+                    + ".zip' file is created");
+            }
+        }
+
+        public class RarCompression : ICompression
+        {
+            public void CompressFolder(string compressedArchiveFileName)
+            {
+                Console.WriteLine("Folder is compressed using Rar approach: '" + compressedArchiveFileName
+                    + ".rar' file is created");
+            }
+        }
+
+        public class CompressionContext
+        {
+            private ICompression Compression;
+            
+            public CompressionContext(ICompression Compression)
+            {
+                this.Compression = Compression;
+            }
+            public void SetStrategy(ICompression Compression)
+            {
+                this.Compression = Compression;
+            }
+            public void CreateArchive(string compressedArchiveFileName)
+            {
+                Compression.CompressFolder(compressedArchiveFileName);
+            }
+        }
+
+        class Program
+        {
+            static void Main(string[] args)
+            {
+                CompressionContext ctx = new CompressionContext(new ZipCompression());
+                ctx.CreateArchive("DotNetDesignPattern");
+                ctx.SetStrategy(new RarCompression());
+                ctx.CreateArchive("DotNetDesignPattern");
+                Console.Read();
+            }
+        }
+
+**When do we need to use the Strategy Design Pattern in real-time applications?**
+
+* When there are multiple solutions for a given task and the selection criteria of a solution defined at run-time.
+
+* When you want different variants of an algorithm.
+
+* When a class defines many behaviors and these appear as multiple conditional statements in its operations.
+  Instead of many conditional statements, move-related conditional branches into their own strategy class.
+
+* When an algorithm uses data that the client shouldn’t know about. Use the Strategy Design Pattern to avoid exposing the complex and algorithm-specific data structures.
+
+
+*******************
+Interpreter Pattern
+*******************
+
+**Interpreter Design Pattern** Provides a way to evaluate language grammar or expression. This pattern is used in SQL parsing, symbol processing engine, etc.
+
+.. image:: images/InterpreterPattern_1.png
+   :width: 500
+
+.. image:: images/InterpreterPattern_2.png
+   :width: 500
+
+.. code-block:: c#
+    :caption: Interpreter Pattern code example
+
+        public class Context
+        {
+            public string expression { get; set; }
+            public DateTime date { get; set; }
+            public Context(DateTime date)
+            {
+                this.date = date;
+            }
+        }
+
+        public interface AbstractExpression
+        {
+            void Evaluate(Context context);
+        }
+
+        public class DayExpression : AbstractExpression
+        {
+            public void Evaluate(Context context)
+            {
+                string expression = context.expression;
+                context.expression = expression.Replace("DD", context.date.Day.ToString());
+            }
+        }
+
+        public class MonthExpression : AbstractExpression
+        {
+            public void Evaluate(Context context)
+            {
+                string expression = context.expression;
+                context.expression = expression.Replace("MM", context.date.Month.ToString());
+            }
+        }
+
+        public class YearExpression : AbstractExpression
+        {
+            public void Evaluate(Context context)
+            {
+                string expression = context.expression;
+                context.expression = expression.Replace("YYYY", context.date.Year.ToString());
+            }
+        }
+
+        class SeparatorExpression : AbstractExpression
+        {
+            public void Evaluate(Context context)
+            {
+                string expression = context.expression;
+                context.expression = expression.Replace(" ", "-");
+            }
+        }
+
+        class Program
+        {
+            static void Main(string[] args)
+            {
+                List<AbstractExpression> objExpressions = new List<AbstractExpression>();
+                Context context = new Context(DateTime.Now);
+                Console.WriteLine("Please select the Expression  : MM DD YYYY or YYYY MM DD or DD MM YYYY ");
+                context.expression = Console.ReadLine();
+                string[] strArray = context.expression.Split(' ');
+                foreach(var item in strArray)
+                {
+                    if(item == "DD")
+                    {
+                        objExpressions.Add(new DayExpression());
+                    }
+                    else if (item == "MM")
+                    {
+                        objExpressions.Add(new MonthExpression());
+                    }
+                    else if (item == "YYYY")
+                    {
+                        objExpressions.Add(new YearExpression());
+                    }
+                }
+                objExpressions.Add(new SeparatorExpression());
+                foreach(var obj in objExpressions)
+                {
+                    obj.Evaluate(context);
+                }
+                Console.WriteLine(context.expression);
+                Console.Read();
+            }
+        }
+
+**Real-time Examples of Interpreter Design Pattern:**
+
+* C# Compiler (CSC) that interprets the C# Source code into byte code that is understood by CLR.
+
+* Google Translator where the input can be in any language and we get the output in another language.
+
+
+****************
+Mediator Pattern
+****************
+
+**Mediator** is a behavioral design pattern that reduces coupling between components of a program or objects by making them communicate indirectly, 
+through a special mediator object.
+
+Mediator object normally handles all the communication complexities between different objects.
+
+.. image:: images/MediatorPattern_1.png
+   :width: 400
+
+**Usage examples:** The most popular usage of the Mediator pattern in C# code is facilitating communications between GUI components of an app. 
+The synonym of the Mediator is the Controller part of MVC pattern.
+
+.. code-block:: c#
+    :caption: Mediator Pattern code example
+
+        // The Mediator interface declares a method used by components to notify the
+        // mediator about various events. The Mediator may react to these events and
+        // pass the execution to other components.
+        public interface IMediator
+        {
+            void Notify(object sender, string ev);
+        }
+
+        // Concrete Mediators implement cooperative behavior by coordinating several
+        // components.
+        class ConcreteMediator : IMediator
+        {
+            private Component1 _component1;
+
+            private Component2 _component2;
+
+            public ConcreteMediator(Component1 component1, Component2 component2)
+            {
+                this._component1 = component1;
+                this._component1.SetMediator(this);
+                this._component2 = component2;
+                this._component2.SetMediator(this);
+            } 
+
+            public void Notify(object sender, string ev)
+            {
+                if (ev == "A")
+                {
+                    Console.WriteLine("Mediator reacts on A and triggers folowing operations:");
+                    this._component2.DoC();
+                }
+                if (ev == "D")
+                {
+                    Console.WriteLine("Mediator reacts on D and triggers following operations:");
+                    this._component1.DoB();
+                    this._component2.DoC();
+                }
+            }
+        }
+
+        // The Base Component provides the basic functionality of storing a
+        // mediator's instance inside component objects.
+        class BaseComponent
+        {
+            protected IMediator _mediator;
+
+            public BaseComponent(IMediator mediator = null)
+            {
+                this._mediator = mediator;
+            }
+
+            public void SetMediator(IMediator mediator)
+            {
+                this._mediator = mediator;
+            }
+        }
+
+        // Concrete Components implement various functionality. They don't depend on
+        // other components. They also don't depend on any concrete mediator
+        // classes.
+        class Component1 : BaseComponent
+        {
+            public void DoA()
+            {
+                Console.WriteLine("Component 1 does A.");
+
+                this._mediator.Notify(this, "A");
+            }
+
+            public void DoB()
+            {
+                Console.WriteLine("Component 1 does B.");
+
+                this._mediator.Notify(this, "B");
+            }
+        }
+
+        class Component2 : BaseComponent
+        {
+            public void DoC()
+            {
+                Console.WriteLine("Component 2 does C.");
+
+                this._mediator.Notify(this, "C");
+            }
+
+            public void DoD()
+            {
+                Console.WriteLine("Component 2 does D.");
+
+                this._mediator.Notify(this, "D");
+            }
+        }
+        
+        class Program
+        {
+            static void Main(string[] args)
+            {
+                // The client code.
+                Component1 component1 = new Component1();
+                Component2 component2 = new Component2();
+                new ConcreteMediator(component1, component2);
+
+                Console.WriteLine("Client triggets operation A.");
+                component1.DoA();
+
+                Console.WriteLine();
+
+                Console.WriteLine("Client triggers operation D.");
+                component2.DoD();
+            }
+        }
+
+
+***************
+Memento Pattern
+***************
+
+**Memento Design Pattern** is used to restore an object to its previous state. That means if you want to perform some kind of undo or rollback operation in your application then you need to use the Memento Design Pattern.
+
+**Description:** 
+
+* The Memento pattern delegates creating the state snapshots to the actual owner of that state, the originator object. 
+  Hence, instead of other objects trying to copy the editor’s state from the “outside,” the editor class itself can make the snapshot since it has full access to its own state
+
+
+* The pattern suggests storing the copy of the object’s state in a special object called memento. The contents of the memento aren’t accessible to any other object except the one that produced it. 
+  Other objects must communicate with mementos using a limited interface which may allow fetching the snapshot’s metadata (creation time, the name of the performed operation, etc.), but not the original object’s state contained in the snapshot.
+
+.. image:: images/MementoPattern_1.png
+   :width: 700
+
+.. code-block:: c#
+    :caption: Memento Pattern code example
+
+        // The Originator holds some important state that may change over time. It
+        // also defines a method for saving the state inside a memento and another
+        // method for restoring the state from it.
+        class Originator
+        {
+            // For the sake of simplicity, the originator's state is stored inside a
+            // single variable.
+            private string _state;
+
+            public Originator(string state)
+            {
+                this._state = state;
+                Console.WriteLine("Originator: My initial state is: " + state);
+            }
+
+            // The Originator's business logic may affect its internal state.
+            // Therefore, the client should backup the state before launching
+            // methods of the business logic via the save() method.
+            public void DoSomething()
+            {
+                Console.WriteLine("Originator: I'm doing something important.");
+                this._state = this.GenerateRandomString(30);
+                Console.WriteLine("Originator: and my state has changed to: {_state}");
+            }
+
+            private string GenerateRandomString(int length = 10)
+            {
+                string allowedSymbols = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                string result = string.Empty;
+
+                while (length > 0)
+                {
+                    result += allowedSymbols[new Random().Next(0, allowedSymbols.Length)];
+
+                    Thread.Sleep(12);
+
+                    length--;
+                }
+
+                return result;
+            }
+
+            // Saves the current state inside a memento.
+            public IMemento Save()
+            {
+                return new ConcreteMemento(this._state);
+            }
+
+            // Restores the Originator's state from a memento object.
+            public void Restore(IMemento memento)
+            {
+                if (!(memento is ConcreteMemento))
+                {
+                    throw new Exception("Unknown memento class " + memento.ToString());
+                }
+
+                this._state = memento.GetState();
+                Console.Write("Originator: My state has changed to: {_state}");
+            }
+        }
+
+        // The Memento interface provides a way to retrieve the memento's metadata,
+        // such as creation date or name. However, it doesn't expose the
+        // Originator's state.
+        public interface IMemento
+        {
+            string GetName();
+
+            string GetState();
+
+            DateTime GetDate();
+        }
+
+        // The Concrete Memento contains the infrastructure for storing the
+        // Originator's state.
+        class ConcreteMemento : IMemento
+        {
+            private string _state;
+
+            private DateTime _date;
+
+            public ConcreteMemento(string state)
+            {
+                this._state = state;
+                this._date = DateTime.Now;
+            }
+
+            // The Originator uses this method when restoring its state.
+            public string GetState()
+            {
+                return this._state;
+            }
+            
+            // The rest of the methods are used by the Caretaker to display
+            // metadata.
+            public string GetName()
+            {
+                return "{this._date} / ({this._state.Substring(0, 9)})...";
+            }
+
+            public DateTime GetDate()
+            {
+                return this._date;
+            }
+        }
+
+        // The Caretaker doesn't depend on the Concrete Memento class. Therefore, it
+        // doesn't have access to the originator's state, stored inside the memento.
+        // It works with all mementos via the base Memento interface.
+        class Caretaker
+        {
+            private List<IMemento> _mementos = new List<IMemento>();
+
+            private Originator _originator = null;
+
+            public Caretaker(Originator originator)
+            {
+                this._originator = originator;
+            }
+
+            public void Backup()
+            {
+                Console.WriteLine("\nCaretaker: Saving Originator's state...");
+                this._mementos.Add(this._originator.Save());
+            }
+
+            public void Undo()
+            {
+                if (this._mementos.Count == 0)
+                {
+                    return;
+                }
+
+                var memento = this._mementos.Last();
+                this._mementos.Remove(memento);
+
+                Console.WriteLine("Caretaker: Restoring state to: " + memento.GetName());
+
+                try
+                {
+                    this._originator.Restore(memento);
+                }
+                catch (Exception)
+                {
+                    this.Undo();
+                }
+            }
+
+            public void ShowHistory()
+            {
+                Console.WriteLine("Caretaker: Here's the list of mementos:");
+
+                foreach (var memento in this._mementos)
+                {
+                    Console.WriteLine(memento.GetName());
+                }
+            }
+        }
+        
+        class Program
+        {
+            static void Main(string[] args)
+            {
+                // Client code.
+                Originator originator = new Originator("Super-duper-super-puper-super.");
+                Caretaker caretaker = new Caretaker(originator);
+
+                caretaker.Backup();
+                originator.DoSomething();
+
+                caretaker.Backup();
+                originator.DoSomething();
+
+                caretaker.Backup();
+                originator.DoSomething();
+
+                Console.WriteLine();
+                caretaker.ShowHistory();
+
+                Console.WriteLine("\nClient: Now, let's rollback!\n");
+                caretaker.Undo();
+
+                Console.WriteLine("\n\nClient: Once more!\n");
+                caretaker.Undo();
+
+                Console.WriteLine();
+            }
+        }
+    
 
 
 
@@ -876,22 +1409,4 @@ As per the Visitor Design Pattern, the element object has to accept the visitor 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        
