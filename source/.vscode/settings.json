@@ -2,5 +2,6 @@
     "restructuredtext.linter.executablePath": "PathToExecutable",
     "restructuredtext.linter.run": "onType",
     "restructuredtext.languageServer.disabled": false,
-    "restructuredtext.confPath": "${workspaceFolder}"
+    "restructuredtext.confPath": "${workspaceFolder}",
+    "restructuredtext.workspaceRoot": "g:\\Documents\\Career-Path\\source"
 }
