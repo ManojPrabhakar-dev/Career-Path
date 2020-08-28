@@ -199,4 +199,320 @@ Anonymous method and Lambda expression can be assigned to the predicate delegate
 Events
 ******
 
-About Events
+An event provide notifications to client applications when some state changes of an object.
+Events is an encapsulated delegate (provide one level of abstraction for delegate) and it follows the *observer design pattern*
+
+The class who raises events is called **Publisher**, and the class who receives the notification is called **Subscriber**. 
+There can be multiple subscribers of a single event.
+
+For example, a publisher raises an event when some action occurred. The subscribers, who are interested in getting a notification 
+when an action occurred, should register with an event and handle it.
+
+Events and Delegates are tightly coupled concept because event handling requires delegate implementation to dispatch events.
+
+
+An event can be declared in two steps:
+
+* Declare a delegate.
+* Declare a variable of the delegate with **event** keyword.
+
+
+.. code-block:: c#
+   :caption: Event example
+
+        public delegate void Notify();  // delegate
+                            
+        public class ProcessBusinessLogic
+        {
+            public event Notify ProcessCompleted; // event
+
+            public void StartProcess()
+            {                
+                OnProcessCompleted();
+            }
+
+            protected virtual void OnProcessCompleted() //protected virtual method
+            {
+                //if ProcessCompleted is not null then call delegate
+                ProcessCompleted?.Invoke(); 
+            }
+        }
+
+        class Program
+        {
+            public static void Main()
+            {
+                ProcessBusinessLogic bl = new ProcessBusinessLogic();
+                bl.ProcessCompleted += bl_ProcessCompleted; // register with an event
+                bl.StartProcess();
+            }
+
+            // event handler
+            public static void bl_ProcessCompleted()
+            {
+                Console.WriteLine("Process Completed!");
+            }
+        }
+
+**Built-in EventHandler Delegate**
+
+.NET Framework includes built-in delegate types **EventHandler** and **EventHandler<TEventArgs>** for the most common events.
+
+Any event should include two parameters: the source of the event and event data. 
+
+* Use the EventHandler delegate for all events that do not include event data. 
+
+* Use EventHandler<TEventArgs> delegate for events that include data to be sent to handlers.
+
+.. code-block:: c#
+   :caption: EventHandler example
+
+   // declaring an event using built-in EventHandler
+    public event EventHandler ProcessCompleted; 
+
+    public void StartProcess()
+    {        
+        OnProcessCompleted(EventArgs.Empty); //No event data
+    }
+
+    protected virtual void OnProcessCompleted(EventArgs e)
+    {
+        ProcessCompleted?.Invoke(this, e);
+    }
+
+
+**Passing an Event Data**
+
+Most events send some data to the subscribers. The EventArgs class is the base class for all the event data classes. 
+.NET includes many built-in event data classes such as RoutedEventArgs, SerialDataReceivedEventArgs etc. 
+It follows a naming pattern of ending all event data classes with **EventArgs**. 
+
+
+You can create your custom class for event data by deriving EventArgs class.
+
+.. code-block:: c#
+   :caption: EventHandler<TEventArgs> example
+
+    // declaring an event using built-in EventHandler
+    public event EventHandler<bool> ProcessCompleted; 
+
+    public void StartProcess()
+    {       
+        OnProcessCompleted(true);       
+    }
+
+    protected virtual void OnProcessCompleted(bool IsSuccessful)
+    {
+        ProcessCompleted?.Invoke(this, IsSuccessful);
+    }
+
+If need to pass more than one value as event data, then create a class deriving from the EventArgs base class
+
+.. code-block:: c#
+   :caption: Custom EventArgs example
+
+   class ProcessEventArgs : EventArgs
+    {
+        public bool IsSuccessful { get; set; }
+        public DateTime CompletionTime { get; set; }
+    }
+
+    // declaring an event using built-in EventHandler
+    public event EventHandler<ProcessEventArgs> ProcessCompleted; 
+
+    public void StartProcess()
+    {
+        var data = new ProcessEventArgs();		  
+        data.IsSuccessful = true;
+        data.CompletionTime = DateTime.Now;
+        OnProcessCompleted(data);        
+    }
+
+    protected virtual void OnProcessCompleted(ProcessEventArgs e)
+    {
+        ProcessCompleted?.Invoke(this, e);
+    }
+
+**Points to Remember :**
+
+* An event is a wrapper around a delegate. It depends on the delegate.
+
+* Use "event" keyword with delegate type variable to declare an event.
+
+* The publisher class raises an event, and the subscriber class registers for an event and provides the event-handler method.
+
+* Name the method which raises an event prefixed with "On" with the event name.
+
+* The signature of the handler method must match the delegate signature.
+
+* Register with an event using the += operator. Unsubscribe it using the -= operator. Cannot use the = operator.
+
+* Events can be declared static, virtual, sealed, and abstract.
+
+* An Interface can include the event as a member.
+
+* Event handlers are invoked synchronously if there are multiple subscribers.
+
+***********
+Interfaces
+***********
+
+Interface is same as a class but interface will contain only the declarations of methods, properties, and events that a class or struct can implement
+and class can contain both declarations and implementation of methods, properties and events.
+
+An interface in c# is more like a contract and the class that implements an interface must provide an implementation for all the members 
+that are specified in the interface.
+
+C# will not support multiple inheritance of classes but that can be achieved by using an interface.
+
+"*An interface includes the declarations of related functionalities*. 
+*The entities that implement the interface must provide the implementation of declared functionalities*."
+
+.. code-block:: c#
+   :caption: Interface example (Implicit)
+
+        //interface members are public by default.
+        interface IFile
+        {
+            void ReadFile();
+            void WriteFile(string text);
+        }
+
+        class FileInfo : IFile
+        {
+        //Interface members must be implemented with the public modifier
+
+            public void ReadFile()
+            {
+                Console.WriteLine("Reading File");
+            }
+
+            public void WriteFile(string text)
+            {
+                Console.WriteLine("Writing to file");
+            }
+        }
+
+        public static void Main()
+        {
+            IFile file1 = new FileInfo();
+            FileInfo file2 = new FileInfo();
+            
+            file1.ReadFile(); 
+            file1.WriteFile("content"); 
+
+            file2.ReadFile(); 
+            file2.WriteFile("content"); 
+        }
+
+we created objects of the FileInfo class and assign it to IFile type variable and FileInfo type variable. 
+When interface implemented implicitly, you can access IFile members with the IFile type variables as well as FileInfo type variable.
+
+**Explicit Implementation**
+
+An interface can be implemented explicitly using <InterfaceName>.<MemberName>. Explicit implementation is useful when class is implementing multiple interfaces; 
+thereby, it is more readable and eliminates the confusion. It is also useful if interfaces have the same method name coincidently.
+
+.. code-block:: c#
+   :caption: Interface example (Explicit)
+        interface IFile
+        {
+            void ReadFile();
+            void WriteFile(string text);
+        }
+
+        class FileInfo : IFile
+        {
+            public void IFile.ReadFile()
+            {  Console.WriteLine("Reading File"); }
+
+            public void IFile.WriteFile(string text)
+            {  Console.WriteLine("Writing to file"); }
+
+            public void Search(string text)
+            {   Console.WriteLine("Searching in file");    }
+        }
+
+        public class Program
+        {
+            public static void Main()
+            {
+                IFile file1 = new FileInfo();
+                FileInfo file2 = new FileInfo();
+                
+                file1.ReadFile(); 
+                file1.WriteFile("content"); 
+                //file1.Search("text to be searched")//compile-time error 
+                
+                file2.Search("text to be searched");
+                //file2.ReadFile(); //compile-time error 
+                //file2.WriteFile("content"); //compile-time error 
+            }
+        }
+
+**Implementing Multiple Interfaces**
+
+A class or struct can implement multiple interfaces. It must provide the implementation of all the members of all interfaces.
+
+
+.. code-block:: c#
+   :caption: Multiple Interface example
+
+        interface IFile
+        {
+            void ReadFile();
+        }
+
+        interface IBinaryFile
+        {
+            void OpenBinaryFile();
+            void ReadFile();
+        }
+
+        class FileInfo : IFile, IBinaryFile
+        {
+            void IFile.ReadFile()
+            {
+                Console.WriteLine("Reading Text File");
+            }
+
+            void IBinaryFile.OpenBinaryFile()
+            {
+                Console.WriteLine("Opening Binary File");
+            }
+
+            void IBinaryFile.ReadFile()
+            {
+                Console.WriteLine("Reading Binary File");
+            }
+
+            public void Search(string text)
+            {
+                Console.WriteLine("Searching in File");
+            }
+        }
+
+        public class Program
+        {
+            public static void Main()
+            {
+                IFile file1 = new FileInfo();
+                IBinaryFile file2 = new FileInfo();
+                FileInfo file3 = new FileInfo();
+                
+                file1.ReadFile(); 
+                //file1.OpenBinaryFile(); //compile-time error 
+                //file1.SearchFile("text to be searched"); //compile-time error 
+                
+                file2.OpenBinaryFile();
+                file2.ReadFile();
+                //file2.SearchFile("text to be searched"); //compile-time error 
+            
+                file3.SearchFile("text to be searched");
+                //file3.ReadFile(); //compile-time error 
+                //file3.OpenBinaryFile(); //compile-time error 
+            }
+        }
+
+The FileInfo implements two interfaces IFile and IBinaryFile explicitly. 
+It is recommended to implement interfaces explicitly when implementing multiple interfaces to avoid confusion and more readability.
