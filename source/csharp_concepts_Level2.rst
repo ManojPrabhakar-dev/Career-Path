@@ -1,16 +1,10 @@
 .. include:: include.rst
 
-.. _csharp_concept:
+.. _csharp_concept_Level2:
 
-###########
-C# Concepts
-###########
-C# was developed by Microsoft and it can be used to develop software for various platforms including Windows, Web, and Mobile.
-C# supports modern object-oriented programming language features including Abstraction, Encapsulation, Polymorphism, and Inheritance. 
-
-C# is a strongly typed language and it supports concepts of classes and objects. Classes have members such as fields, properties, events, and methods.
-
-Since its inception, C# language has gone through various upgrades. The latest version of C# is v8.0.
+##################
+C# Concepts Level2
+##################
 
 *********
 Delegates
@@ -368,6 +362,23 @@ C# will not support multiple inheritance of classes but that can be achieved by 
 "*An interface includes the declarations of related functionalities*. 
 *The entities that implement the interface must provide the implementation of declared functionalities*."
 
+**Why Use Interface ?**
+
+interfaces are a very logical way of grouping objects in terms of behavior.
+
+Using interface-based design concepts provides 
+
+* loose coupling, component-based programming, easier maintainability, makes your code base more scalable and makes code reuse much more accessible because the implementation is separated from the interface. 
+
+* Interfaces add a **plug and play** like architecture into your applications. 
+
+* Interfaces help define a contract (agreement or blueprint), between your application and other objects. 
+This indicates what sort of methods, properties, and events are exposed by an object.
+
+* When many components use the same interface it allows us to easily interchange one component for another which is using the same interface. 
+  Dynamic programs begin to form easily from this.
+
+
 .. code-block:: c#
    :caption: Interface example (Implicit)
 
@@ -516,3 +527,4 @@ A class or struct can implement multiple interfaces. It must provide the impleme
 
 The FileInfo implements two interfaces IFile and IBinaryFile explicitly. 
 It is recommended to implement interfaces explicitly when implementing multiple interfaces to avoid confusion and more readability.
+

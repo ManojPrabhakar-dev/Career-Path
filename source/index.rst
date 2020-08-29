@@ -26,7 +26,8 @@ Software Development Concepts |docversion|
    :numbered:
    :maxdepth: 2
 
-   csharp_concepts
+   csharp_concepts_Level1
+   csharp_concepts_Level2
    wpf_concepts
 
 .. toctree::
