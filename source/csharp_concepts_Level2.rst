@@ -14,8 +14,11 @@ A delegate is a reference type variable that can holds a reference to the method
 It provides a way which tells which method is to be called when an event is triggered.
 
 * Provides a good way to encapsulate the methods.
+
 * Delegates are mainly used in implementing the call-back methods and events.
+
 * Delegates can be chained together as two or more methods can be called on a single event.
+
 
 **Syntax** :
 

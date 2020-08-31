@@ -189,339 +189,77 @@ Dynamic types change types at run-time based on the assigned value.
         MyDynamicVar = "Hello World!!";
         Console.WriteLine("Value: {0}, Type: {1}", MyDynamicVar, MyDynamicVar.GetType());
 
-*****************************
-Covariance and Contravariance
-*****************************
-
-**Covariance** enables you to pass a derived type where a base type is expected. Co-variance is like variance of the same kind.
-
-The base class and other derived classes are considered to be the same kind of class that adds extra functionalities to the base type. 
-
-Covariance in delegates allows flexiblity in the return type of delegate methods.
-
-
-**Contravariane** is applied to parameters. Cotravariance allows a method with the *parameter of a base class* to be assigned to a delegate 
-that expects the *parameter of a derived class*.
-
-
-.. code-block:: c#
-   :caption: Covariance and Contravariance example
-
-        delegate Small covarDel(Big mc);
-
-        class Program
-        {
-            static Big Method4(Small sml)
-            {        
-                return new Big();
-            }
-
-            static void Main(string[] args)
-            {
-                covarDel del = Method4;    
-                Small sm = del(new Big());
-            }
-        }
-
-
-******
-Tuple
-******
-
-The Tuple<T> class was introduced in .NET Framework 4.0. A tuple is a data structure that contains a sequence of elements of different data types. 
-It can be used where you want to have a data structure to hold an object with properties, but you don't want to create a separate type for it.
-
-Tuple<T1, T2, T3, T4, T5, T6, T7, TRest> //tuple can only include a maximum of eight elements
-
-Tuple<int, string, string> person = 
-                        new Tuple <int, string, string>(1, "Steve", "Jobs");
-                        
-var person = Tuple.Create(1, "Steve", "Jobs");  //static helper class Tuple, which returns an instance of the Tuple<T> without specifying each element's type
-
-//Accessing Tuple elements - Item<elementNumber>
-
-person.Item1; // returns 1
-person.Item2; // returns "Steve"
-person.Item3; // returns "Jobs"
-
-//Nested Tuples
-
-var numbers = Tuple.Create(1, 2, 3, 4, 5, 6, 7, Tuple.Create(8, 9, 10, 11, 12, 13));
-numbers.Item1; // returns 1
-numbers.Rest.Item1; //returns (8, 9, 10, 11, 12, 13)
-numbers.Rest.Item1.Item1; //returns 8
-
-**Usage of Tuple**
-
-* When you want to return multiple values from a method without using **ref** or **out** parameters.
-
-* When you want to pass multiple values to a method through a single parameter.
-
-* When you want to hold a database record or some values temporarily without creating a separate class.
-
-The Tuple elements can be accessed using properties with a name pattern Item<elementNumber>, which does not make sense.
-
-C# 7.0 (.NetFramework 4.7) includes **ValueTuple** to overcome Tuple's limitations and makes it even easier to work with Tuple.
-
 ***********
-Value Tuple
+Collections
 ***********
 
-Value Tuple can be created and initialized using parentheses () and specifying the values in it.
+C# includes specialized classes that *store series of values or objects* are called collections.
 
-var person = (1, "Bill", "Gates");
-    
-//equivalent Tuple
-//var person = Tuple.Create(1, "Bill", "Gates");
+two types of collections available in C#: 
 
-ValueTuple<int, string, string> person = (1, "Bill", "Gates"); //can be created by specifying specific typeto each element
-person.Item1;  // returns 1
+* non-generic collections  //System.Collections namespace
 
-Shorthand : (int, string, string) person = (1, "Bill", "Gates");
+* generic collections  //System.Collections.Generic
 
-ValueTuple can include more than eight values.
+Note : It is recommended to use the generic collections because they perform faster than non-generic collections and also minimize exceptions by giving compile-time errors.
 
-**Named Menbers**
+**ArrayList**
 
-We can assign names to the ValueTuple properties instead of having the default property names like Item1, Item2 and so on.
+ArrayList is a non-generic collection of objects whose size increases dynamically. It is the same as Array except that its size increases dynamically.
 
-(int Id, string FirstName, string LastName) person = (1, "Bill", "Gates");
-person.Id;   // returns 1
+An ArrayList can be used to add unknown data where you don't know the types and the size of the data.
 
-We can also assign member names on the right side with values, as below.
+var arlist1 = new ArrayList();
+arlist1.Add(1);
+arlist1.Add("Bill");
 
-var person = (Id:1, FirstName:"Bill", LastName: "Gates");
+//Access individual item using indexer
+int firstElement = (int) arlist[0]; //returns 1
+string secondElement = (string) arlist[1]; //returns "Bill"
 
-**Deconstruction**
+Use the AddRange(ICollection c) method to add an entire Array, HashTable, SortedList, ArrayList, BitArray, Queue, and Stack in the ArrayList.
 
-Individual members of a ValueTuple can be retrieved by deconstructing it.
 
-A deconstructing declaration syntax splits a ValueTuple into its parts and assigns those parts individually to fresh variables.
+**List<T>**
 
-// change property names
-(int PersonId, string FName, string LName) = GetPerson();
+The List<T> is a collection of strongly typed objects that can be accessed by index and having methods for sorting, searching, and modifying list.
 
-// use var as datatype - We can also use var instead of explicit data type names.
-(var PersonId, var FName, var LName) person = GetPerson();
+**List<T> Characteristics**
 
-static (int, string, string) GetPerson() 
-{
-    return (Id:1, FirstName: "Bill", LastName: "Gates");
-}
+* List<T> equivalent of the ArrayList, which implements IList<T>.
 
-ValueTuple also allows "discards" in deconstruction for the members you are not going to use.
+* List<T> can contain elements of the specified type. It provides compile-time type checking and **doesn't perform boxing-unboxing** because it is generic.
 
-// use discard _ for the unused member LName
-(var id, var FName, _) = GetPerson(); 
+* Elements can be added using the Add(), AddRange() methods or collection-initializer syntax.
 
-********
-Indexers
-********
+* Elements can be accessed by passing an index e.g. myList[0]. Indexes start from zero.
 
-An indexer is a special type of property that allows a class or a structure to be accessed like an array for its internal collection.
+* List<T> performs faster and less error-prone than the ArrayList.
 
-An indexer can be defined the same way as property with **this** keyword and square brackets **[]**.
 
-.. code-block:: c#
-   :caption: Indexer example
-        class StringDataStore
-        {
-            private string[] strArr = new string[10]; // internal data storage
+**SortedList<TKey, TValue>**
 
-            public string this[int index]
-            {
-                get => strArr[index];    
-                set => strArr[index] = value;             
-            }
-        }
+The SortedList<TKey, TValue>, and SortedList are collection classes that can store key-value pairs that are sorted by the keys based on the associated **IComparer** implementation. 
 
-        //Accessing the indexer
-        StringDataStore strStore = new StringDataStore();
-        strStore[0] = "One";
+For example, if the keys are of primitive types, then sorted in ascending order of keys.
 
-**Generic Indexer**
+C# supports generic and non-generic SortedList. It is recommended to use generic SortedList<TKey, TValue> because it *performs faster and less error-prone* than the non-generic SortedList.
 
-Generic indexer can be used with any data type
+**SortedList Characteristics**
 
-.. code-block:: c#
-   :caption: Generic Indexer example
+* It uses less memory than SortedDictionary<TKey,TValue>.
 
-        class DataStore<T>
-        {
-            private T[] store; 
+* It is *faster in the retrieval of data* once sorted, whereas SortedDictionary<TKey, TValue> is *faster in insertion and removing key-value pairs*.
 
-            public DataStore()
-            {
-                store = new T[10];
-            }
+**Dictionary<TKey, TValue>**
 
-            public DataStore(int length)
-            {
-                store = new T[length];
-            }
+The Dictionary<TKey, TValue> is a generic collection that stores key-value pairs in no particular order.
 
-            public T this[int index]
-            {
-                get => store[index];    
-                set => store[index] = value; 
-            }
+IDictionary<int, string> numberNames = new Dictionary<int, string>();
+numberNames.Add(1,"One"); //adding a key/value using the Add() method
+numberNames.Add(2,"Two");
 
-            public int Length
-            {
-                get=> store.Length;        
-            }
-        }
-
-**Overload Indexer**
-
-It can be overloaded with the different data types for index.
-
-.. code-block:: c#
-   :caption: Overload Indexer example
+foreach(KeyValuePair<int, string> kvp in numberNames)
+    Console.WriteLine("Key: {0}, Value: {1}", kvp.Key, kvp.Value);
 
-        private string[] strArr = new string[10];
-
-        public string this[int index]
-        {
-            get => strArr[index];    
-            set => strArr[index] = value;             
-        }
 
-        public string this[string name]
-        {
-            get
-            {
-                foreach (string str in strArr){
-                    if(str.ToLower() == name.ToLower())        
-                        return str;
-                    }
-                        
-                return null;
-            }
-        }
-
-********
-Generics
-********
-
-In C#, generic means not specific to a particular data type.
-
-C# allows you to define generic classes, interfaces, abstract classes, fields, methods, static methods, 
-properties, events, delegates, and operators using the **type parameter** and without the specific data type.
-
-A type parameter is a placeholder for a particular type specified when creating an instance of the generic type.
-
-e.g. TypeName<T> where T is a type parameter.
-
-class DataStore<T>
-{
-    public T Data { get; set; }   //Generic fields
-
-    private T[] _data = new T[10];   //Generic Array
-    
-    //Generic Methods
-
-    public void AddOrUpdate(int index, T item)
-    {
-        if(index >= 0 && index < 10)
-            _data[index] = item;
-    }
-
-    public T GetData(int index)
-    {
-        if(index >= 0 && index < 10)
-            return _data[index];
-        else 
-            return default(T);
-    }
-}
-
-//Instantiating Generic class
-//String Data Type
-DataStore<string> strStore = new DataStore<string>(); 
-strStore.Data = "Hello World!";
-
-//Int Data Type
-DataStore<int> intStore = new DataStore<int>();
-intStore.Data = 100;
-
-class KeyValuePair<TKey, TValue> //Multiple Type parameter
-{
-    public TKey Key { get; set; }
-    public TValue Value { get; set; }
-}
-
-A generic class increases the reusability. The more type parameters mean more reusable it becomes.
-
-Example: Generic Method in Non-generic Class
-
-class Printer
-{
-    public void Print<T>(T data)
-    {
-        Console.WriteLine(data);
-    }
-}
-
-Printer printer = new Printer();
-printer.Print<int>(100);
-printer.Print(200); // type infer from the specified value
-printer.Print<string>("Hello");
-printer.Print("World!"); // type infer from the specified value
-
-**Advantages of Generics**
-
-* Generics increase the reusability of the code. You don't need to write code to handle different data types.
-
-* Generics are type-safe. You get compile-time errors if you try to use a different data type than the one specified in the definition.
-
-* Generic has a performance advantage because it removes the possibilities of boxing and unboxing.
-
-
-*******************
-Generic Constraints
-*******************
-
-C# allows you to use constraints to restrict client code to specify certain types while instantiating generic types.
-
-GenericTypeName<T> where T  : contraint1, constraint2
-
-**where T : class**
-
-// generic class with a constraint to reference types
-// can pass reference types such as class, interface, delegate, or array type
-class DataStore<T> where T : class
-{
-    public T Data { get; set; }
-}
-
-**where T : struct**
-
-struct constraint that restricts type argument to be non-nullable value type only.
-
-class DataStore<T> where T : struct
-{
-    public T Data { get; set; }
-}
-
-**where T : new()**
-
-new() type argument must be a reference type which has a public parameterless constructor
-
-class DataStore<T> where T : class, new()
-{
-    public T Data { get; set; }
-}
-
-
-**where T : baseclass**
-
-Base class constraint that restricts type argument to be a derived class of the specified class, abstract class, or an interface.
-
-class DataStore<T> where T : IEnumerable
-{
-    public T Data { get; set; }
-}
-
-DataStore<ArrayList> store = new DataStore<ArrayList>(); // valid
-DataStore<List> store = new DataStore<List>(); //valid
