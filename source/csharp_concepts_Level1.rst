@@ -263,3 +263,80 @@ foreach(KeyValuePair<int, string> kvp in numberNames)
     Console.WriteLine("Key: {0}, Value: {1}", kvp.Key, kvp.Value);
 
 
+*********
+HashTable
+*********
+
+The Hashtable is a non-generic collection that stores key-value pairs, similar to generic Dictionary<TKey, TValue> collection. 
+
+It optimizes lookups by computing the hash code of each key and stores it in a different bucket internally and then matches the hash code of the specified key 
+at the time of accessing values.
+
+.. code-block:: c#
+   :caption: Hashtable example
+
+        Hashtable numberNames = new Hashtable();
+        numberNames.Add(1,"One"); //adding a key/value using the Add() method
+        numberNames.Add(2,"Two");
+        numberNames.Add(3,"Three");
+
+        //The following throws run-time exception: key already added.
+        //numberNames.Add(3, "Three"); 
+
+        foreach(DictionaryEntry de in numberNames)
+            Console.WriteLine("Key: {0}, Value: {1}", de.Key, de.Value);
+
+        //Hashtable is a non-generic collection, so you must type cast values while retrieving it.
+
+        string one = (string) numberNames[1]; //cast to string
+
+Why Use Hashtable ?
+
+* In a well-dimensioned hash table, the average cost for each lookup is independent of the number of elements stored in the table.
+
+* In many situations, hash tables turn out to be more efficient than search trees or any other table lookup structure.
+
+Disadvantage
+
+* The hash tables are not effective when the number of entries is very small.
+
+They are widely used in many kinds of computer software, particularly for associative arrays, database indexing, caches and sets.
+
+*****
+Stack
+*****
+
+Stack is a special type of collection that stores elements in LIFO style (*Last In First Out*). C# includes the generic Stack<T> and non-generic Stack collection classes. 
+It is recommended to use the generic Stack<T> collection.
+
+Stack is useful to store temporary data in LIFO style, and you might want to delete an element after retrieving its value.
+
+**Stack<T> Characteristics**
+
+* Stack<T> is Last In First Out collection.
+
+* Stack<T> can contain elements of the specified type. It provides compile-time type checking and doesn't perform boxing-unboxing because it is generic.
+
+* Elements can be added using the **Push()**(*Inserts an item at the top of the stack*) method.
+
+* Elements can be retrieved using the **Pop()**(*Removes and returns items from the top of the stack*) and **Peek()**(*Returns the top item from the stack*) methods.
+  It does not support an indexer.
+
+*****
+Queue
+*****
+
+Queue is a special type of collection that stores the elements in FIFO style (*First In First Out*), exactly opposite of the Stack<T> collection. 
+It contains the elements in the order they were added. 
+
+C# includes generic Queue<T> and non-generic Queue collection. It is recommended to use the generic Queue<T> collection.
+
+**Queue<T> Characteristics**
+
+* Queue<T> is FIFO (First In First Out) collection.
+
+* Queue<T> can contain elements of the specified type. It provides compile-time type checking and doesn't perform boxing-unboxing because it is generic.
+
+* Elements can be added using the Enqueue() method.
+
+* Elements can be retrieved using the Dequeue() and the Peek() methods. It does not support an indexer.
