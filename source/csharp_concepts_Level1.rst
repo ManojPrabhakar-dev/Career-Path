@@ -189,6 +189,7 @@ The static constructor is called only once whenever the static method is used or
 
 A static constructor can only access static members. It cannot contain or access instance members.
 
+Note : Static members are stored in a special area in the memory called **High-Frequency Heap**.
 
 ****************
 Anonymous Method
