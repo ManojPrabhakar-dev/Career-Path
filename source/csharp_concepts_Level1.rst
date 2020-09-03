@@ -22,6 +22,174 @@ Types ->Single dimensional array, Multi Dimensional Array and Jagged Array
 int[][] jArray1 = new int[2][]; // can include two single-dimensional arrays 
 int[][,] jArray2 = new int[3][,]; // can include three two-dimensional arrays 
 
+******
+struct
+******
+
+Struct is the **value type** data type that represents data structures. It can contain a parameterized constructor, static constructor, constants, fields, methods, properties, indexers, operators, events, and nested types.
+
+Struct can be used to hold small data values that do not require inheritance, e.g. coordinate points, key-value pairs, and complex data structure.
+
+A structure is declared using **struct** keyword. The default modifier is internal for the struct and its members.
+
+struct Coordinate
+{
+    public int x;
+    public int y;
+}
+
+//A struct object can be created with or without the new operator, same as primitive type variables.
+
+Coordinate point = new Coordinate();  //calls default constructor and assign values
+Console.WriteLine(point.x); //output: 0  
+Console.WriteLine(point.y); //output: 0 
+
+Coordinate point; 
+Console.Write(point.x); // Compile time error -> if created without new, need to initialize value before accessing them
+
+point.x = 10;
+point.y = 20;
+Console.Write(point.x); //output: 10  
+Console.Write(point.y); //output: 20
+
+* struct is a value type, so it is faster than a class object. 
+
+* Use struct whenever you *want to just store the data*. Generally, structs are good for game programming. 
+
+* It is easier to transfer a class object than a struct. So do not use struct when you are passing data across other classes.
+
+* struct *cannot inherit* another structure or class, and it cannot be the base of a class.
+
+* struct members cannot be specified as *abstract, sealed, virtual, or protected*.
+
+****
+Enum
+****
+
+An enum (or enumeration type) is used to assign constant names to a group of integer values. 
+It makes constant values more readable and can be used to access array/list index using enum items instead of 0,1 etc.
+
+enum Categories
+{
+    Electronics = 0,  
+    Food = 1, 
+    Automotive = 2
+}
+
+The enum can be of any numeric data type such as byte, sbyte, short, ushort, int, uint, long, or ulong. However, an enum cannot be a string type.
+
+Specify the type after enum name as : type
+
+//byte Enum
+
+enum Categories: byte
+{
+    Electronics = 1,  
+    Food = 5, 
+    Automotive = 6
+}
+
+**************
+String Builder
+**************
+
+**string type** is *immutable*. It means a string cannot be changed once created. 
+
+For example, a new string, "Hello World!" will occupy a memory space on the heap. Now, by changing the initial string "Hello World!" to "Hello World! from Tutorials Teacher" 
+will create a *new string object on the memory heap* instead of modifying an original string at the same memory address. 
+
+This behavior would hinder the performance if the original string changed multiple times by replacing, appending, removing, or inserting new strings in the original string.
+
+**StringBuilder** doesn't create a new object in the memory but dynamically expands memory to accommodate the modified string
+
+StringBuilder sb = new StringBuilder(); //string will be appended later
+//or
+StringBuilder sb = new StringBuilder("Hello World!");
+
+you can also specify the maximum capacity of the StringBuilder object using overloaded constructors
+
+StringBuilder sb = new StringBuilder(50); //string will be appended later
+//or
+StringBuilder sb = new StringBuilder("Hello World!", 50);
+
+C# allocates a maximum of 50 spaces sequentially on the memory heap. This capacity will automatically be doubled once it reaches the specified capacity
+
+**Points to Remember :**
+
+* StringBuilder is mutable.
+
+* StringBuilder performs faster than string when appending multiple string values.
+
+* Use StringBuilder when you need to append more than three or four strings.
+
+* Use the Append() method to add or append strings to the StringBuilder object.
+
+* Use the ToString() method to retrieve a string from the StringBuilder object.
+
+*************
+Partial Class
+*************
+
+Partial Class provides ability to implement the functionality of a single class into multiple files and all these files are combined into a single class file when the application is compiled.
+A partial class is created by using a **partial** keyword. 
+
+This keyword is also useful to split the functionality of methods, interfaces, or structure into multiple files.
+
+**Advantages :**
+
+* With the help of partial class multiple developers can work simultaneously on the same class in different files.
+
+* With the help of partial class concept you can split the UI of design code and the business logic code to read and understand the code.
+
+* You can also maintain your application in an efficient manner by compressing large classes into small ones.
+
+******
+Static
+******
+
+static means something which cannot be instantiated. You cannot create an object of a static class and cannot access static members using an object.
+
+C# classes, variables, methods, properties, operators, events, and constructors can be defined as static using the static modifier keyword.
+
+**Static Class**
+
+* Static classes cannot be instantiated.
+
+* All the members of a static class must be static; otherwise the compiler will give an error.
+
+* A static class cannot contain instance members and constructors.
+
+* Static classes are sealed class and therefor Static Members in Non-static Class cannot be inherited and cannot inherit from other classes.
+
+* Static class members can be accessed using ClassName.MemberName.
+
+* A static class remains in memory for the lifetime of the application domain in which your program resides.
+
+**Static Members in Non-static Class**
+
+The normal class (non-static class) can contain one or more static methods, fields, properties etc.
+
+It is more practical to define a non-static class with some static members, than to declare an entire class as static.
+
+**Static Fields**
+
+Static fields of a non-static class is shared across all the instances. So, changes done by one instance would reflect in others.
+
+**Static Method**
+
+Static methods *can be called without creating an object*. You cannot call static methods using an object of the non-static class.
+
+The static methods *can only call other static methods and access static members*. You cannot access non-static members of the class in the static methods.
+
+**Static Constructor**
+
+A non-static class can contain a parameterless static constructor. It can be defined with the static keyword and without access modifiers like public, private, and protected.
+
+The static constructor is called only once whenever the static method is used or creating an instance for the first time.
+
+A static constructor can only access static members. It cannot contain or access instance members.
+
+
 ****************
 Anonymous Method
 ****************
