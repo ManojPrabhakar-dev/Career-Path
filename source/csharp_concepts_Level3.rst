@@ -415,3 +415,29 @@ Not require any kind of special permission from the original type and there is n
 
 * It cannot apply to fields, properties, or events.
 
+******
+Stream
+******
+
+System.IO.Stream is an abstract class that provides standard methods to transfer bytes (read, write, etc.) to the source. 
+It is like a wrapper class to transfer bytes.
+
+Classes that need to read/write bytes from a particular source must implement the Stream class.
+
+**FileStream** reads or writes bytes from/to a physical file, whether it is a .txt, .exe, .jpg, or any other file. 
+
+**MemoryStream** reads or writes bytes that are stored in memory.
+
+**BufferedStream** reads or writes bytes from other Streams to improve certain I/O operations' performance.
+
+**NetworkStream** reads or writes bytes from a network socket.
+
+**PipeStream** reads or writes bytes from different processes.
+
+**CryptoStream** is for linking data streams to cryptographic transformations.
+
+FileStream class provides reading and writing functionality of bytes to physical file.
+Reader & writer classes provides functionality to read bytes from Stream classes (FileStream, MemoryStream etc) and converts bytes into appropriate encoding.
+
+**StreamReader** provides a helper method to read string from FileStream by converting bytes into strings.
+**StreamWriter** provides a helper method to write string to FileStream by converting strings into bytes.

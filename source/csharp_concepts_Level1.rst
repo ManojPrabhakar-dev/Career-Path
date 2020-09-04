@@ -126,6 +126,47 @@ C# allocates a maximum of 50 spaces sequentially on the memory heap. This capaci
 
 * Use the ToString() method to retrieve a string from the StringBuilder object.
 
+*****************
+Class and objects
+*****************
+
+A class is a *user-defined blueprint or prototype from which objects are created*. Class combines the fields and methods into a single unit.
+
+Classes are the *user defined data types that represent the state ,behaviour and identity of an object*.
+
+State represents the properties and behaviour is the action that objects can perform.
+Identity gives a unique name to an object and enables one object to interact with other objects.
+
+**Key points about classes**
+
+* Classes are reference types that hold the object created dynamically in a heap.
+
+* The default access modifier of a class is Internal.
+
+* The default access modifier of methods and variables is Private.
+
+**Types of Classes**
+
+* Abstract class
+
+An Abstract class is a class that provides a common definition to the subclasses.
+We cannot create an object of an abstract class.If need to use it then it must be inherited in a subclass.
+
+* Partial Class
+
+It is a type of class that allows dividing their properties, methods and events into multiple source files and at compile time these files are combined into a single class.
+
+* Sealed class
+
+A Sealed class is a class  that cannot be inherited and used to restrict the properties.
+To access the sealed members we must create an object of the class.
+
+* Static Class
+
+It is the type of class that cannot be instantiated. we cannot create an object of that class using the new keyword, 
+such that class members can be called directly using their class name.
+
+
 *************
 Partial Class
 *************
