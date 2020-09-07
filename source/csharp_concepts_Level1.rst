@@ -184,6 +184,46 @@ This keyword is also useful to split the functionality of methods, interfaces, o
 
 * You can also maintain your application in an efficient manner by compressing large classes into small ones.
 
+***********
+Constructor
+***********
+
+A special method of the class that is automatically invoked when an instance of the class is created is called a constructor.
+The main use of constructors is to initialize the private fields of the class while creating an instance for the class.
+
+* Default Constructor
+
+* Parameterized Constructor
+
+* Copy Constructor
+
+The constructor which creates an object by copying variables from another object is called a **copy constructor**.
+The purpose of a copy constructor is to initialize a new instance to the values of an existing instance.
+ 
+public employee(employee emp)  
+{  
+    name=emp.name;  
+    age=emp.age;  
+}  
+
+employee emp1 = new employee("Vithal", 23);  // Create a new employee object.  
+employee emp2 = new employee(emp1);          // here is emp1 details is copied to emp2.  
+Console.WriteLine(emp2.Details);  
+
+* Static Constructor
+
+When a constructor is created using a static keyword, it will be invoked only once for all of the instances of the class and
+it is invoked during the creation of the first instance of the class 
+
+* Private Constructor 
+
+It is not possible for other classes to derive from this class, neither is it possible to create an instance of this class.
+ 
+* One use of a private constructor is when we have only static members.
+
+* It provides an implementation of a singleton class pattern
+
+
 ******
 Static
 ******
@@ -511,6 +551,48 @@ Disadvantage
 * The hash tables are not effective when the number of entries is very small.
 
 They are widely used in many kinds of computer software, particularly for associative arrays, database indexing, caches and sets.
+
+*********
+Bit Array
+*********
+
+The BitArray class manages a compact array of bit values, which are represented as Booleans, where true indicates that the bit is ON i.e, 1 and false indicates the bit is off i.e, 0.
+
+// Creating a BitArray 
+BitArray myBitArr = new BitArray(3); 
+
+myBitArr[0] = true; 
+myBitArr[1] = true; 
+myBitArr[2] = false; 
+
+// To get the value of index at index 2 
+Console.WriteLine(myBitArr.Get(2)); 
+
+*******
+HashSet
+*******
+
+HashSet is an unordered collection of unique elements.
+
+It is generally used when we want to prevent duplicate elements from being placed in the collection.
+The performance of the HashSet is much better in comparison to the list.
+
+HashSet<string> myhash1 = new HashSet<string>();   
+// Add the elements in HashSet         
+myhash1.Add("C"); 
+myhash1.Add("C++");
+
+*********
+SortedSet
+*********
+
+SortedSet is an collection of unique elements in sorted order (Ascending).
+
+SortedSet<int> my_Set1 = new SortedSet<int>();   
+// Add the elements in SortedSet         
+my_Set1.Add(101); 
+my_Set1.Add(1001); 
+my_Set1.Add(10001); 
 
 *****
 Stack

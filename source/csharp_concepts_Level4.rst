@@ -205,3 +205,177 @@ The biggest advantages of Late binding is that the Objects of this type can hold
 
 Method Overloading happens at compile time (Early Binding) while Overriding happens at runtime (Late Binding).
 
+*********************************
+Serialization and Deserialization
+*********************************
+
+**Serialization** is a process of converting an object into a stream of bytes to store it in memory or database or in a file. 
+
+The main purpose of serialization is to save the state of an object to recreate it whenever we required and we can send an object to other applications.
+
+**Deserialization** is the reverse process of serialization that means it will convert the stream of bytes into an object.
+
+The main purpose of deserialization is to read the stream of bytes from the file or database or from memory and we can convert it into an object.
+
+.. code-block:: c#
+   :caption: Serialization and Deserialization example
+
+        [Serializable]  
+        class Student  
+        {  
+            public int rollno;  
+            public string name;  
+            public Student(int rollno, string name)  
+            {  
+                this.rollno = rollno;  
+                this.name = name;  
+            }  
+        }  
+
+        //Serialization
+        FileStream stream = new FileStream("e:\\sss.txt", FileMode.OpenOrCreate);  
+        BinaryFormatter formatter=new BinaryFormatter();      
+        Student s = new Student(101, "sonoo");  
+        formatter.Serialize(stream, s);  
+        stream.Close();  
+
+        //Deserialization
+        FileStream stream = new FileStream("e:\\sss.txt", FileMode.OpenOrCreate);  
+        BinaryFormatter formatter=new BinaryFormatter();  
+        Student s=(Student)formatter.Deserialize(stream);  
+        Console.WriteLine("Rollno: " + s.rollno);  
+        Console.WriteLine("Name: " + s.name);  
+        stream.Close();  
+
+**********
+Reflection
+**********
+
+Reflection is a process to get metadata of a type at runtime.
+
+Reflection is useful to get the type information that describes assemblies, modules, members, parameters and other entities in the managed code
+by examining their metadata.
+
+* we can create type instances dynamically at runtime, bind or get the type from an existing object and invoke its methods or access its fields
+  and properties.
+
+* It provides access to perform **late binding** and get methods type information created at runtime.
+
+Reflection are *used for data binding* in .NET Framework. It is also *used for testing* in .NET Framework.
+
+e.g., Reflection is commonly used in IoC containers.
+Let's say you want to register every concrete class the ends with the word "Controller".
+
+***********
+IEnumerable
+***********
+
+**IEnumerable** is an interface and it is useful to enable an *iteration over non-generic collections* and
+it is available with System.Collections namespace.
+
+public interface IEnunmerable
+{
+    IEnumerator GetEnumerator();
+}
+
+**IEnumerator** interface will provide the ability to iterate through the given collection object by exposing
+Current property, MoveNext and Reset methods.
+
+public interface IEnumerator
+{
+    bool MoveNext();
+    object Current { get; }
+    void Reset();
+}
+
+To enable an iteration over the custom collection classes, you need to implement both IEnumerable and IEnumerator interfaces.
+ 
+Note :
+
+All the collection elements such as queue, stack, list, dictionary, etc. are enumerable because they already implemented an IEnumerable interface.
+So, we are able to iterate over the items in collections using a foreach loop.
+
+.. code-block:: c#
+   :caption: IEnumerable example
+        class Program {
+            static void Main(string[] args) {
+                UserInfo[] uInfo = new UserInfo[3]{
+                    new UserInfo(1, "Suresh", "Chennai"),
+                    new UserInfo(2, "Rohini", "Guntur"),
+                    new UserInfo(3, "Trishika", "Guntur")
+                    };
+
+                Users users = new Users(uInfo);
+                foreach (var user in users){
+                    Console.WriteLine(user.Id + ", " + user.Name + ", " + user.Location);
+                }
+            }
+        }
+
+        public class UserInfo {
+            public UserInfo(int id, string name, string location){
+                this.Id = id;
+                this.Name = name;
+                this.Location = location;
+            }
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public string Location { get; set; }
+        }
+
+        //Implements IEnumerable Interface
+
+        public class Users : IEnumerable {
+            private UserInfo[] _user;
+            public Users(UserInfo[] uArray) {
+                _user = new UserInfo[uArray.Length];   
+                for (int i = 0; i < uArray.Length; i++) {
+                    _user[i] = uArray[i];
+                }
+            }
+
+            IEnumerator IEnumerable.GetEnumerator() {
+                return (IEnumerator)GetEnumerator();
+            }
+
+            public UsersEnum GetEnumerator() {
+                return new UsersEnum(_user);
+            }
+        }
+
+        // Implements IEnumerator Interface
+        public class UsersEnum : IEnumerator
+        {
+            public UserInfo[] _user;
+            int currentIndex = -1;
+            public UsersEnum(UserInfo[] list) {
+                _user = list;
+            }
+
+            public bool MoveNext() {
+                currentIndex++;
+                return (currentIndex < _user.Length);
+            }
+
+            object IEnumerator.Current
+            {
+                get {
+                    return Current;
+                }
+            }
+
+            public UserInfo Current {
+                get {
+                        return _user[currentIndex];
+                }
+            }
+
+            public void Reset() {
+                currentIndex = -1;
+            }
+        }
+    }
+
+To enable an iteration over the custom collection classes, you need to implement both IEnumerable and IEnumerator interfaces.
+
+
