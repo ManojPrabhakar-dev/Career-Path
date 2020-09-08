@@ -379,3 +379,77 @@ So, we are able to iterate over the items in collections using a foreach loop.
 To enable an iteration over the custom collection classes, you need to implement both IEnumerable and IEnumerator interfaces.
 
 
+*****
+Yield
+*****
+
+yield keyword effectively creates a lazy enumeration over collection items that can be much more efficient.
+
+For example, *yield return an IEnumerable with the only needed items*.
+
+The advantage of using yield is that if the function consuming your data simply needs the first item of the collection,
+the rest of the items won't be created.
+
+The yield operator allows the creation of items as it is demanded. 
+
+It helps to provide custom iteration *without creating temp collections*.
+
+It helps to do **stateful iteration**.
+
+.. code-block:: c#
+   :caption: Yield example
+
+        static void Main(string[] args){
+            foreach (int i in Multiply(2, 10)){
+                Console.Write("{0} ", i);
+            }           
+        }
+
+        public static IEnumerable<int> Multiply(int number, int range){
+            int result = 1;
+            for (int i = 1; i < range; i++){
+                result = result * number;
+                yield return result;
+            }
+        }
+
+*****
+Regex
+*****
+
+Regular expression (regex) is a pattern and it is useful to parse and validatewhether the given input text is matching the defined pattern 
+(such as an email address) or not.
+
+Regular expression class will perform two things:
+
+* Parsing the inputing text for the regular expression pattern.
+
+* Identify the regular expression pattern in the given text.
+
+
+********************
+String Interpolation
+********************
+
+**String Interpolation** is a feature which is used to embed any valid expression that returns a value into a string using **$** operator.
+
+The string which is prepended with $ operator will call it as an interpolated string and this feature is available from c# 6.0.
+
+String Interpolation is an extended version of the string.Format() feature to provide a more readable and convenient way to include formatted string expression results into a string literal.
+
+
+.. code-block:: c#
+   :caption: String interpolation example
+        string name = "Suresh";
+        DateTime date = DateTime.Now; 
+
+        // Normal formatting
+        string strFormat = string.Format("Hi {0}, Today is {1} and it's {2:HH:mm} now.", name, date.DayOfWeek, date);
+        Console.WriteLine(strFormat);
+        // Output: Hi Suresh, Today is Friday and it's 05:38 now.
+
+        // String interpolation
+        string strIntr = $"Hi {name}, Today is {date.DayOfWeek} and it's {date:HH:mm} now.";
+        Console.WriteLine(strIntr);
+        // Output: Hi Suresh, Today is Friday and it's 05:38 now.
+
