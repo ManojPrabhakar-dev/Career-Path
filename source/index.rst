@@ -29,6 +29,8 @@ Software Development Concepts |docversion|
    csharp_concepts_Level1
    csharp_concepts_Level2
    csharp_concepts_Level3
+   csharp_concepts_Level4
+   csharp_concepts_Level5
    wpf_concepts
 
 .. toctree::
