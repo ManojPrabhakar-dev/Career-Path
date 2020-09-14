@@ -98,3 +98,12 @@ Threads are expensive as they consume a lot of resources in your system for init
 A thread pool is a good choice when you want to limit the number of threads that are running at a given point of time and 
 want to avoid the overhead of creating and destroying threads in your application.
 
+There are a number of ways to create the thread pool:
+
+Via the Task Parallel Library (from Framework 4.0).
+
+By calling ThreadPool.QueueUserWorkItem.
+
+Via asynchronous delegates.
+
+Via BackgroundWorker.

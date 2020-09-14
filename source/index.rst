@@ -31,6 +31,7 @@ Software Development Concepts |docversion|
    csharp_concepts_Level3
    csharp_concepts_Level4
    csharp_concepts_Level5
+   AsynchronousProgramming
    wpf_concepts
 
 .. toctree::
