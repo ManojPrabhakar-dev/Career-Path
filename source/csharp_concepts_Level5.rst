@@ -2,108 +2,130 @@
 
 .. _csharp_concept_Level5:
 
+
+###################
+C# 7.X New features
+###################
+
+*************
+Out Variables
+*************
+
+We can declare the variable directly in parameter of function call without the need of creating prior to function call.
+since  the out parameter doesn't need to be initialized before using.
+
+GetEmployeeDetails(out **string** EmployeeName, out **string** Gender);
+
+****************
+Pattern Matching
+****************
+
+* Can perform pattern matching on any data type, even your own, whereas with if/else, you always need primitives to match.
+
+* Pattern matching can extract values from your expression.
+
+* C# 7.0 introduces pattern matching in two cases, the **is** expression and the **switch** statement.
+
+.. code-block:: c#
+   :caption: Before pattern Matching example
+
+        public static void DisplayArea(Shape shape)
+        {
+             if (shape is Circle)
+            {
+                Circle c = (Circle)shape;
+                Console.WriteLine("Area of Circle is : " + c.Radius * c.Radius * Shape.PI);
+            }
+            else if (shape is Rectangle)
+            {
+                Rectangle r = (Rectangle)shape;
+                Console.WriteLine("Area of Rectangle is : " + r.Length * r.Height);
+            }
+        }
+
+.. code-block:: c#
+   :caption:  pattern Matching using **is** example
+
+        public static void DisplayArea(Shape shape)
+        {
+            if (shape is Circle c)
+            {
+                Console.WriteLine("Area of Circle is : " + c.Radius * c.Radius * Shape.PI);
+            }
+            else if (shape is Rectangle r)
+            {
+                Console.WriteLine("Area of Rectangle is : " + r.Length * r.Height);
+            }
+        }
+
+.. code-block:: c#
+   :caption:  pattern Matching using **switch** example
+
+        public static void DisplayArea(Shape shape)
+        {
+            switch (shape)
+            {
+                case Circle c:
+                    Console.WriteLine("Area of Circle is : " + c.Radius * c.Radius * Shape.PI);
+                    break;
+                case Rectangle r:
+                    Console.WriteLine("Area of Rectangle is : " + r.Length * r.Height);
+                    break;
+            }
+        }
+
 ***************
-Multi Threading
+Digit Separator
 ***************
 
-**Thread** is a lightweight processand it is defined as the execution path of a program.
+In reality, it’s very difficult to read a very large number. To overcome this problem, C# 7 comes with a new feature called digit separators “_”.
+Now, it is possible to use one or more Underscore (_) character as digit separators.
 
-A thread is the smallest unit of execution within a process.
-So, every program or application has some logic/code and to execute that logic/code, Thread comes into the picture.
+var bigNumber = 123456789012345678;
+var bigNumberSplit = 123_456_789_012_345_678;
+//Both var print same value - Digit separator only for visual understanding
+Console.WriteLine("bigNumber : {0}, bigNumberSplit : {1}", bigNumber, bigNumberSplit);
 
-By default, every process has at least one thread which is responsible for executing the application code and that thread is called as **Main Thread**.
+***************
+Local Functions
+***************
 
-A single thread can have only one path of execution but as mentioned earlier, sometimes we may need multiple paths of execution and that is where threads play a role.
+The Local Functions are the special kind of inner function or you can say sub-function or function within a function that can be declared and defined by the parent function.
+These methods or functions are the private methods for their containing type and are only called by their parent method. 
 
-Usage : complicated and time consuming operations , Concurrent programming etc
+* Small helper functions to be used several times within the main or parent method.
 
-Note :
+* Parameter validation functions for any iterators or asynchronous methods.
 
-*Under the operating system, we have processes that running our applications. So under the process, an application runs*.
-*To run the code of an application, the process will make use of a concept called Thread*.
-
-Two types of threads are as follows :
-
-* Foreground Thread
-
-A thread which keeps on running to complete its work even if the Main thread leaves its process.
-
-* Background Thread
-
-A thread which leaves its process when the Main method leaves its process.
-
-The **Join method** of Thread class in C# blocks the current thread and makes it wait until the child thread on which the Join method invoked completes its execution.
+* An alternate to recursive functions as local function comparatively takes less memory due to the reduced call stack.
 
 
-*Protect the Shared Resources in Multithreading*
+*************************
+Ref Local and Ref Returns
+*************************
 
-**Locking** 
+The **Ref local** in C# is a new variable type that is used to store the references. It is mostly used in conjunction with Ref returns to store the reference in a local variable.
+That means Local variables now can also be declared with the ref modifier.
 
-private static object _lockObject = new object();
+int no1 = 1;
+ref int no2 = ref no1;
+no2 = 2;
+Console.WriteLine($"local variable {nameof(no1)} after the change: {no1}");
 
-static void DisplayMessage()
-{
-    lock(_lockObject)
-    {
-        Console.Write("[Welcome to the ");
-        Thread.Sleep(1000);
-        Console.WriteLine("world of dotnet!]");
-    }
-}
+**Ref Returns**
 
-**Monitor**
+Before C# 7.0, the ref was only used to be passed as a parameter in a method, however, there was no provision to return it and use it later.
+With C# 7.0, this constraint has been waived off and now you can return references from a method as well. 
 
-The Monitor class provides a mechanism to *synchronizes access to objects*.
+public **ref** int GetFirstOddNumber(int[] numbers);
 
-The lock is the shortcut for **Monitor.Enter** with try and finally. So, the lock provides the basic functionality to acquire an exclusive lock on a synchronized object.
-But, If you want more control to implement advanced multithreading solutions using TryEnter() Wait(), Pulse(), and PulseAll() methods, then the Monitor class is your option.
+ref int oddNum = ref GetFirstOddNumber(x); //storing as reference  
 
-**Mutex**
+************************
+Generalized Async Return
+************************
 
-Mutex also works likes a lock i.e. acquired an exclusive lock on a shared resource from concurrent access, but it works across multiple processes. 
-
-The Mutex class provides the **WaitOne()** method which we need to call to lock the resource and similarly it provides **ReleaseMutex()** which is used to unlock the resource.
-
-Note that a Mutex can only be released from the same thread which obtained it.
-
-**Semaphore**
-
-The Semaphore is used to limit the number of threads that can have access to a shared resource concurrently.
-
-In real-time, we need to use Semaphore when we have a limited number of resources and we want to limit the number of threads that can use it.
-
-**DeadLock**
-
-Deadlock is a situation where two or more threads are unmoving or frozen in their execution because they are waiting for each other to finish.
-
-*Avoiding Deadlock by using Monitor.TryEnter method*
-
-Monitor.TryEnter method takes time out in milliseconds. Using that parameter we can specify a timeout for the thread to release the lock. 
-
-If a thread is holding a resource for a long time while the other thread is waiting, then Monitor will provide a time limit and force the lock to release it.
-So that the other thread will enter into the critical section.
+The generalized async returns types in C# mean you can return a lightweight value type instead of a reference type to avoid additional memory allocations.
+From C# 7, there is an inbuilt value type **ValueTask <T>** which can be used instead of Task<T>.
 
 
-***********
-Thread Pool
-***********
-
-Thread pooling is the process of creating a collection of threads during the initialization of a multithreaded application,
-and then reusing those threads for new tasks as and when required, instead of creating new threads.
-
-A thread pool comprises a collection of threads and it can be used to perform several activities in the background.
-
-Threads are expensive as they consume a lot of resources in your system for initialization, switching contexts, and releasing the resources they occupy.
-
-A thread pool is a good choice when you want to limit the number of threads that are running at a given point of time and 
-want to avoid the overhead of creating and destroying threads in your application.
-
-There are a number of ways to create the thread pool:
-
-Via the Task Parallel Library (from Framework 4.0).
-
-By calling ThreadPool.QueueUserWorkItem.
-
-Via asynchronous delegates.
-
-Via BackgroundWorker.
