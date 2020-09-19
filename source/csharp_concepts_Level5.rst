@@ -128,4 +128,40 @@ Generalized Async Return
 The generalized async returns types in C# mean you can return a lightweight value type instead of a reference type to avoid additional memory allocations.
 From C# 7, there is an inbuilt value type **ValueTask <T>** which can be used instead of Task<T>.
 
+**********
+AutoMapper
+**********
+
+The AutoMapper in C# is a mapper between two objects. That is AutoMapper is an object-object mapper.
+It maps the properties of two different objects by transforming the input object of one type to the output object of another type.
+
+            //Initialize the mapper
+            var config = new MapperConfiguration(cfg =>
+                    cfg.CreateMap<Employee, EmployeeDTO>()
+                );
+            //Creating the source object
+            Employee emp = new Employee
+            {
+                Name = "James",
+                Salary = 20000,
+                Address = "London",
+                Department = "IT"
+            };
+            //Using automapper
+            var mapper = new Mapper(config);
+            var empDTO = mapper.Map<EmployeeDTO>(emp);
+            //OR
+            //var empDTO2 = mapper.Map<Employee, EmployeeDTO>(emp);
+            Console.WriteLine("Name:" + empDTO.Name + ", Salary:" + empDTO.Salary + ", Address:" + empDTO.Address + ", Department:" + empDTO.Department);
+            Console.ReadLine();
+
+
+//When Souce property and destination property name are different, use ForMember method like below,
+
+            //Initialize the mapper
+            var config = new MapperConfiguration(cfg =>
+                    cfg.CreateMap<Employee, EmployeeDTO>()
+                    .ForMember(dest => dest.FullName, act => act.MapFrom(src => src.Name))
+                    .ForMember(dest => dest.Dept, act => act.MapFrom(src => src.Department))
+                );
 
