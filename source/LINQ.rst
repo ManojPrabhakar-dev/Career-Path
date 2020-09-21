@@ -327,8 +327,251 @@ foreach (string program in MethodSyntax)
 }
 
 
+*************************
+Where Filtering Operators
+*************************
+
+**Filtering** is nothing but the process to get only those elements from a data source that satisfied the given condition.
+It is also possible to fetch the data from a data source with more than one condition as per our business requirement.
+
+* Where
+
+The “where” always expects at least one condition and we can specify the condition(s) using predicates. The conditions can be written using the following symbols
+
+==, >=, <=, &&, ||, >, <, etc.
+
+.. image:: images/Linq_Where_Overloads.png
+   :width: 300
+
+A predicate is nothing but a function that is used to test each and every element for a given condition.
+
+List<int> intList = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+
+//-----------------Where usage for Overload 1-----------------------
+//Method Syntax
+IEnumerable<int> filteredData = intList.Where(num => num > 5);
+
+//Query Syntax
+IEnumerable<int> filteredResult = from num in intList
+                                    where num > 5
+                                    select num;
+
+//-----------------Where usage for Overload 2-----------------------
+
+ //Method Syntax
+var OddNumbersWithIndexPosition = intList.Select((num, index) => new
+                                    {
+                                        Numbers = num,
+                                        IndexPosition = index
+                                    }).Where(x => x.Numbers % 2 != 0)
+                                    .Select(data => new
+                                    {
+                                        Number = data.Numbers,
+                                        IndexPosition = data.IndexPosition
+                                    });
+
+//Query Syntax
+var OddNumbersWithIndexPosition = from number in intList.Select((num, index) => new {Numbers = num, IndexPosition = index })
+                                    where number.Numbers % 2 != 0
+                                    select new
+                                    {
+                                        Number = number.Numbers,
+                                        IndexPosition = number.IndexPosition
+                                    };
+
+//-------------------------Where usage for Complex types----------------------------
+
+//Query Syntax
+var QuerySyntax = from employee in Employee.GetEmployees()
+                    where employee.Salary > 50000
+                    select employee;
+
+//Method Syntax
+var MethodSyntax = Employee.GetEmployees()
+                    .Where(emp => emp.Salary > 50000);
+
+//----------------Multiple Condition----------------------
+
+//Query Syntax
+var QuerySyntax = from employee in Employee.GetEmployees()
+                    where employee.Salary > 500000 && employee.Gender == "Male"
+                    select employee;
+
+//Method Syntax
+var MethodSyntax = Employee.GetEmployees()
+                    .Where(emp => emp.Salary > 500000 && emp.Gender == "Male")
+                    .ToList();
+
+//----------Multiple conditions with the custom operation and projecting the data to an anonymous type---------
+
+ //Query Syntax
+var QuerySyntax = (from employee in Employee.GetEmployees()
+                    where employee.Salary >= 50000 && employee.Technology != null
+                    select new {
+                        EmployeeName = employee.Name,
+                        Gender = employee.Gender,
+                        MonthlySalary = employee.Salary / 12
+                    }).ToList();
+            
+//Method Syntax
+var MethodSyntax = Employee.GetEmployees()
+                    .Where(emp => emp.Salary >= 50000 && emp.Technology != null)
+                    .Select(emp => new {
+                        EmployeeName = emp.Name,
+                        Gender = emp.Gender,
+                        MonthlySalary = emp.Salary / 12
+                    })
+                    .ToList();
+
+* OfType
+
+The **OfType** Operator in LINQ is used to filter specific type data from a data source based on the data type we passed to this operator.
+For example, if we have a collection that stores both integer and string values and if we need to fetch either only the integer values or
+only the string values from that collection then we need to use the OfType operator.
+
+public static IEnumerable<TResult> OfType<TResult>(this IEnumerable source);
+
+List<object> dataSource = new List<object>()
+{
+    "Tom", "Mary", 50, "Prince", "Jack", 10, 20, 30, 40, "James"
+};
+
+List<int> intData = dataSource.OfType<int>().ToList();
+
+//Query Syntax
+var stringData = (from name in dataSource
+                           where name is string
+                           select name).ToList();
+
+//OfType and is Operator with a condition
+
+var intData = dataSource.OfType<int>().Where(num => num > 30).ToList();
+
+var stringData = (from name in dataSource
+                           where name is string && name.ToString().Length > 3
+                           select name).ToList();
+
+************
+Set Operator
+************
+
+The **Set** Operators in LINQ are used to produce the result set based on the presence and absence of elements within the same or different data sources.
+
+That means these operations are performed either on a single data source or on multiple data sources and in the output some of the data are present and some of the data are absent.
+
+**When to Use**
+
+* If we need to select the distinct records from a data source (No Duplicate Records) then we need to use Set Operators.
+
+* Suppose we need to select all the Employees of a company except a particular department then you need to use Set Operations.
+
+* Another example maybe if you have multiple classes and you want only to select all the toppers from all the classes then also you need to use Set Operations.
+
+* Suppose we have different data sources with similar structure and if we want to combine all the data sources into a single data source then we need to use Set Operations.
 
 
+**Distinct**
+
+We need to use the Distinct() method when we want to remove the duplicate data or records from a data source. This method operates on a single data source.
+
+.. image:: images/Linq_Distinct.png
+   :width: 300
+
+.. code-block:: c#
+   :caption: Distinct example
+
+        List<int> intCollection = new List<int>()
+                    {
+                        1,2,3,2,3,4,4,5,6,3,4,5
+                    };
+
+        //Using Method Syntax
+        var MS = intCollection.Distinct();
+
+        //Using Query Syntax
+        var QS = (from num in intCollection
+                    select num).Distinct();
+
+        //Get Distinct names by ignoring case
+        string[] namesArray = { "Priyanka", "HINA", "hina", "Anurag", "Anurag", "ABC", "abc" };
+
+        //StringComparer class implements the IEqualityComparer interface 
+        var distinctNames = namesArray.Distinct(StringComparer.OrdinalIgnoreCase);
+
+
+        //----------Dinstinct for complex type------------------
+
+        //Using Method Syntax
+        var MS = Student.GetStudents()
+                .Select(std => std.Name)
+                .Distinct().ToList();
+
+        //Using Query Syntax
+        var QS = (from std in Student.GetStudents()
+                    select std.Name)
+                    .Distinct().ToList();
+
+        //----------Implementing IEqualityComparer interface---------------
+        //----------To compare the student object to avoid duplicate-------
+        public class StudentComparer : IEqualityComparer<Student>
+        {
+            public bool Equals(Student x, Student y)
+            {
+                //First check if both object reference are equal then return true
+                if(object.ReferenceEquals(x, y))
+                {
+                    return true;
+                }
+                //If either one of the object refernce is null, return false
+                if (object.ReferenceEquals(x,null) || object.ReferenceEquals(y, null))
+                {
+                    return false;
+                }
+                //Comparing all the properties one by one
+                return x.ID == y.ID && x.Name == y.Name;
+            }
+            public int GetHashCode(Student obj)
+            {
+                //If obj is null then return 0
+                if (obj == null)
+                {
+                    return 0;
+                }
+                //Get the ID hash code value
+                int IDHashCode = obj.ID.GetHashCode();
+                //Get the string HashCode Value
+                //Check for null refernece exception
+                int NameHashCode = obj.Name == null ? 0 : obj.Name.GetHashCode();
+                return IDHashCode ^ NameHashCode;
+            }
+        }
+
+        //Creating an instance of StudentComparer
+        StudentComparer studentComparer = new StudentComparer();
+
+        //Using Method Syntax
+        var MS = Student.GetStudents()
+                .Distinct(studentComparer).ToList();
+        //Using Query Syntax
+        var QS = (from std in Student.GetStudents()
+                    select std)
+                    .Distinct(studentComparer).ToList();
+
+
+**Except**
+
+We need to use the Except() LINQ Extension method when we want to return all the elements from the first data source which do not exists in the second data source.
+This method operates on two data sources.
+
+
+**Intersect**
+
+This method is used to return the common elements from both the data sources i.e. the elements which exist in both the data set are going to returns as output.
+
+
+**Union**
+
+This method is used to return all the elements which are present in either of the data sources. That means it combines the data from both the data sources and produce a single result set.
 
 
 
