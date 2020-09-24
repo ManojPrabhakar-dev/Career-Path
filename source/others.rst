@@ -1,3 +1,12 @@
+.. code-block:: c#
+   :caption: XXX example
+   
+   
+.. image:: images/ImageName.png
+   :width: 300
+   
+Reference : `ConceptName blog <https://dotnettutorials.net/lesson/builder-design-pattern/>`_
+
 
 // Interface 1 
 interface GFG1 { 
@@ -66,4 +75,5 @@ public class GFG {
 Design pattern Link :
 
 1. https://dotnettutorials.net/lesson/creational-design-pattern/
+
 

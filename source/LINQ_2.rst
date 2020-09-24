@@ -280,6 +280,253 @@ Note that when you are using multiple keys in Group By operator then the data re
             Console.WriteLine();
       }
 
+**********************
+Linq ToLookUp Operator
+**********************
+
+The Linq ToLookup Method in C# exactly does the same thing as the GroupBy Operator does in Linq.
+The only difference between these two methods is the **GroupBy method** uses *deferred execution*
+whereas the execution of the **ToLookup method** is *immediate*.
+
+.. code-block:: c#
+   :caption: ToLookup example
+
+      var GroupByMS = Student.GetStudents().ToLookup(s => s.Barnch);
+
+      var GroupByQS = (from std in Student.GetStudents()
+                             select std).ToLookup(x => x.Barnch);
+
+
+**Deferred Execution vs Immediate Execution**
+
+**Deferred or Lazy Operators:**
+
+These query operators are used for deferred execution. 
+For example – select, SelectMany, where, Take, Skip, etc. are belongs to Deferred or Lazy Operators category.
+
+.. code-block:: c#
+   :caption: Deferred example
+      // In the below statement the LINQ Query is only defined and not executed
+      // If the query is executed here, then the result should not display Santosh
+      IEnumerable<Employee> result = from emp in listEmployees
+                                       where emp.Salary == 80000
+                                       select emp;
+
+      // The LINQ query is actually executed when we iterate thru using a for each loop            
+      foreach (Employee emp in result)
+      {
+            Console.WriteLine($" {emp.ID} {emp.Name} {emp.Salary}");
+      }
+
+**Advantages of Deferred Execution:**
+
+* It avoids unnecessary query execution which improves the performance of the application.
+
+* The Query creation and the Query execution are decoupled which provide us the flexibility to create the query in several steps.
+
+* A Linq deferred execution query is always re-evaluated when we re-enumerate. As a result, we always get the updated data.
+
+
+**Immediate or Greedy Operators:**
+
+These query operators are used for immediate execution.
+For Example – count, average, min, max, First, Last, ToArray, ToList, etc. are belongs to the Immediate or Greedy Operators category.
+
+.. code-block:: c#
+   :caption: Immediate example
+      // In the following statement, the LINQ Query is executed immediately as we are
+      // Using the ToList() method which is a greedy operator which forces the query 
+      // to be executed immediately
+      IEnumerable<Employee> result = (from emp in listEmployees
+                                       where emp.Salary == 80000
+                                       select emp).ToList();
+
+*******************
+Linq Join Operation
+*******************
+
+Join operations are used to fetch the data from two or more data sources based on some common properties present in the data sources.
+
+There are two methods available in Linq to perform Join Operations.
+
+**Join:** This operator is used to join two data sources or collection based on common property and return the data as a single result set.
+
+**GroupJoin:** This operator is also used to join two data sources or collections based on a common key or property but return the result as a group of sequences.
+
+
+**Types of Join Operator**
+
+**Inner Join**
+
+Linq Inner join is used to return only the matching elements from both the data sources while the non-matching elements are removed from the result set.
+
+*Note*: While performing the Linq inner join then there should exist a common element or property in both the data sources.
+
+.. image:: images/Linq_Join_Overloads.png
+   :width: 300
+
+1. Outer data source
+
+2. Inner data source
+
+3. Outer Key selector (common key in the outer data source)
+
+4. Inner Key selector (Common key in the inner data source)
+
+5. Result selector (project the data into a result set)
+
+
+.. code-block:: c#
+   :caption: Join example
+      var JoinUsingMS = Employee.GetAllEmployees() //Outer Data Source
+                           .Join(
+                           Address.GetAllAddresses(),  //Inner Data Source
+                           employee => employee.AddressId, //Inner Key Selector
+                           address => address.ID, //Outer Key selector
+                           (employee, address) => new //Projecting the data into a result set
+                           {
+                               EmployeeName = employee.Name,
+                               AddressLine = address.AddressLine
+                           }).ToList();
+
+**Join using Multiple Data Source**
+
+.. image:: images/Linq_Join_MultipleDataSources.png
+   :width: 400
+
+.. code-block:: c#
+   :caption: Join using Multiple Data Sources example
+      var JoinMultipleDSUsingMS =
+               //Employee data Source (i.e. Data Source 1)
+               Employee.GetAllEmployees()
+               //Joining with Address data Source (i.e. Data Source 2)
+               .Join(
+                     Address.GetAllAddresses(), //Inner Data Source 1
+                     empLevel1 => empLevel1.AddressId, //Outer Key selector
+                     addLevel1 => addLevel1.ID, //Inner Key selector
+                     //Result set
+                     (empLevel1, addLevel1) => new { empLevel1, addLevel1 }
+                  )
+               // Joinging with Department data Source (i.e. data Source 3)
+               .Join(
+                     Department.GetAllDepartments(), //Inner Data Source 2
+                     //You cannot access the outer key selector directly
+                     //You can only access with the result set created in previous step
+                     //i.e. using empLevel1 and addLevel1
+                     empLevel2 => empLevel2.empLevel1.ID, //Outer Key selector
+                     addLevel1 => addLevel1.ID, //Inner Key selector
+                     //Result set
+                     (empLevel2, addLevel1) => new { empLevel2, addLevel1 }
+               )
+               //Creating the actual result set
+               .Select(e => new
+               {
+                  ID = e.empLevel2.empLevel1.ID,
+                  EmployeeName = e.empLevel2.empLevel1.Name,
+                  AddressLine = e.empLevel2.addLevel1.AddressLine,
+                  DepartmentName = e.addLevel1.Name
+               }).ToList();
+
+***************
+Linq Group Join
+***************
+
+Linq Group Join is used to group the result sets based on a common key.
+
+Group Join is basically used to produces hierarchical data structures. Each item from the first data source is paired with a set of correlated items from the second data source.
+
+.. code-block:: c#
+   :caption: Group Join example
+      var GroupJoinMS = Department.GetAllDepartments().
+                GroupJoin(
+                    Employee.GetAllEmployees(),
+                    dept => dept.ID,
+                    emp => emp.DepartmentId,
+                    (dept, emp) => new {dept, emp}
+                );
+            //Printing the Result set
+            //Outer Foreach is for all department
+            foreach(var item in GroupJoinMS)
+            {
+                Console.WriteLine("Department :" + item.dept.Name);
+                //Inner Foreach loop for each employee of a department
+                foreach(var employee in item.emp)
+                {
+                    Console.WriteLine("  EmployeeID : " + employee.ID + " , Name : " + employee.Name);
+                }
+            }
+
+*********
+Left Join
+*********
+
+Left Outer Join is going to return all the matching data from both the data sources as well as all the non-matching data from the left data source.
+In such cases, for the non-matching data, it will take null values for the second data source.
+
+In order to implement the Linq Left Join in C#, it’s mandatory to use the “INTO” keyword along with the “DefaultIfEmpty()” method.
+
+
+.. code-block:: c#
+   :caption: Left Join example
+      var MSOuterJOIN = Employee.GetAllEmployees()
+                              .GroupJoin(
+                                    Address.GetAddress(),
+                                    emp => emp.AddressId,
+                                    add => add.ID,
+                                    (emp, add) => new { emp, add }
+                              )
+                              .SelectMany(
+                                    x => x.add.DefaultIfEmpty(), 
+                                    (employee, address) => new{ employee, address }
+                               );
+
+         foreach (var item in MSOuterJOIN)
+         {
+               Console.WriteLine($"Name : {item.employee.emp.Name}, Address : {item.address?.AddressLine} ");
+         }
+
+**********
+Cross Join
+**********
+
+When combining two data sources (or you can two collections) using Linq Cross Join, then each element in the first data source (i.e. first collection) will be mapped with each and every element in the second data source (i.e. second collection).
+
+.. code-block:: c#
+   :caption: Cross Join example
+      //Cross Join using SelectMany Method
+      var CrossJoinResult = Student.GetAllStudnets()
+                  .SelectMany(sub => Subject.GetAllSubjects(),
+                     (std, sub) => new
+                     {
+                        Name = std.Name,
+                        SubjectName = sub.SubjectName
+                     });
+      //Cross Join using Join Method
+      var CrossJoinResult2 = Student.GetAllStudnets()
+                  .Join(Subject.GetAllSubjects(),
+                        std => true,
+                        sub => true,
+                        (std, sub) => new
+                        {
+                           Name = std.Name,
+                           SubjectName = sub.SubjectName
+                        }
+                     );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
