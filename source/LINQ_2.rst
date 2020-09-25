@@ -514,6 +514,109 @@ When combining two data sources (or you can two collections) using Linq Cross Jo
                      );
 
 
+****************
+Element Operator
+****************
+
+The Element Operators in Linq are used to return a single element from a data source using the element index or based on a predicate i.e. a condition.
+These Element Operators can be used with a single data source or on a query of multiple data sources.
+
+**When to Use**
+
+* Select the First record from a data source.
+
+* Fetch a specific record from the data source.
+
+* Select the last record from a data source.
+
+**ElementAt and ElementAtOrDefault**
+
+The **ElementAt** operator is used to return an element from a specific index. If the data source is empty or if the provided index value is out of range, then we will get ArgumentOutOfRangeException.
+
+The **ElementAtOrDefault** method does the same thing as the ElementAt method except that this method does not throw an exception when the data source is empty or when the supplied index value is out of range.
+In such cases, it will return the default value based on the data type of the element the data source contain.
+
+**First and FirstOrDefault**
+
+The Linq **First** Method is used to return the first element from a data source. If the data source is empty, then this method will throw an exception.
+
+.. code-block:: c#
+   :caption: First example
+      List<int> numbers = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+      int MethodSyntax = numbers.First();
+      //using Predicate
+      int MethodSyntax = numbers.First(num => num % 2 == 0);
+      //Whenever the data source is empty or if the specified condition does not return any data,
+      then we will get the InvalidOperationException
+
+
+The Linq **FirstOrDefault** method exactly does the same thing as the First method except that this method does not throw Invalid Operation Exception instead it returns the default value based on the data type of the element.
+
+.. code-block:: c#
+   :caption: FirstOrDefault example
+      List<int> numbers = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+      int MethodSyntax = numbers.FirstOrDefault();
+      int MethodSyntax = numbers.FirstOrDefault(num => num > 5);
+
+**Last and LastOrDefault**
+
+Last Method in Linq is used to return the last element from a data source.
+
+Last();
+
+Last(num => num < 5); //With predicate
+
+The **LastOrDefault** method exactly does the same thing as the Linq Last method except that the LastOrDefault method does not throw Invalid Operation Exception instead it returns the default value based on the data type of the element.
+
+LastOrDefault();
+
+LastOrDefault(num => num < 5);
+
+**************************
+Single and SingleOrDefault
+**************************
+
+Single Method returns the only element from a sequence. If the data source is empty or if the data source contains more than one element, then it throws an exception.
+
+method will throw an exception when any of the following condition is true.
+
+* If the data source is empty.
+
+* When the given condition does not satisfy any element in the sequence.
+
+* If the given condition satisfies more than one element.
+
+The Linq **SingleOrDefault** method is very much similar to the Linq Single method except that this method will not throw an exception when the sequence is empty or when no element in the sequence satisfied the given condition.
+
+*Note* : Like the Single method, the SingleOrDefault method still throws an exception when the sequence contains more than one matching element for the given condition.
+
+**************
+DefaultIfEmpty
+**************
+
+If the sequence or data source on which the DefaultIfEmpty method is called is not empty, then the values of the original sequence or data source are going to be returned.
+On the other hand, if the sequence or data source is empty, then it returns a sequence with the default values based on the data type.
+
+.. code-block:: c#
+   :caption: DefaultIfEmpty example
+      List<int> numbers = new List<int>() {10, 20, 30};
+      //Returns the list since it is not empty
+      IEnumerable<int> result = numbers.DefaultIfEmpty();
+
+      List<int> numbers = new List<int>() {};
+      //Return 0 since the source is empty
+      IEnumerable<int> result = numbers.DefaultIfEmpty();
+
+      //Overload 2 -> return the default value which passed during func call if source is empty
+      IEnumerable<int> result = numbers.DefaultIfEmpty(5);
+
+
+
+
+
+
+
+
 
 
 
