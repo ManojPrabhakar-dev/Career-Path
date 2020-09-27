@@ -130,13 +130,85 @@ The Enumerable class also provides three non-extension methods are as follows.
             return null;
         }
 
+**Append Method**
+
+The LINQ Append Method is used to append a value to the end of the sequence. This Append method does not modify the elements of the sequence.
+Instead, it creates a copy of the sequence with the new element.
+
+**Prepend Method**
+
+The Linq Prepend Method is used to add one value to the beginning of a sequence. This Prepend method like the Append method does not modify the elements of the sequence.
+Instead, it creates a copy of the sequence with the new element.
+
+**Zip Method**
+
+The Zip method merges each element of the first sequence with an element in the second sequence that has the same index position.
+If both the sequences do not have the same number of elements, then the Zip method merges sequences until it reaches the end of the sequence which contains fewer elements.
+
+.. code-block:: c#
+   :caption: Zip example
+      int[] numbersSequence = { 10, 20, 30, 40, 50 };
+      string[] wordsSequence = { "Ten", "Twenty", "Thirty", "Fourty" };
+      var resultSequence = numbersSequence.Zip(wordsSequence, (first, second) => first + " - " + second);
+
+**ToList Method**
+
+The ToList Method is used to create a System.Collections.Generic.List<T> collection from a System.Collections.Generic.IEnumerable<T>. This method causes the query to be executed immediately.
+
+.. code-block:: c#
+   :caption: ToList example
+      //Creating Integer Array
+      int[] numbersArray = { 10, 22, 30, 40, 50, 60 };
+      //Converting Integer Array to List using ToList method
+      List<int> numbersList = numbersArray.ToList();
+
+**ToArray Method**
+
+The ToArray Method is used to copies the elements of System.Collections.Generic.List<T> to a new array.
+
+.. code-block:: c#
+   :caption: ToArray example
+      //Create a List
+      List<int> numbersList = new List<int>()
+      {
+            10, 22, 30, 40, 50, 60
+      };
+      //Converting List to Array
+      int[] numbersArray = numbersList.ToArray();
 
 
+**ToDictionary**
 
+The ToDictionary method in C# is used to creates a System.Collections.Generic.Dictionary<TKey,TValue> from an System.Collections.Generic.IEnumerable<T> according to a specified key selector. 
 
+.. code-block:: c#
+   :caption: ToDictionary example
+      List<Product> listProducts = new List<Product>
+      {
+            new Product { ID= 1001, Name = "Mobile", Price = 800 },
+            new Product { ID= 1002, Name = "Laptop", Price = 900 },
+            new Product { ID= 1003, Name = "Desktop", Price = 800 }
+      };
 
+      //Overload 1 -> keyselector as ID
+      Dictionary<int, Product> productsDictionary = listProducts.ToDictionary(x => x.ID);
 
+      //Overload 2 - with keySelector and element selector
+      Dictionary<int, string> productsDictionary = listProducts.ToDictionary(x => x.ID, x => x.Name);
 
+**Cast Operator**
 
+The Cast Operator in C# is used to casts all the elements of a collection (System.Collections.IEnumerable) to a specified type and
+then return a new System.Collections.Generic.IEnumerable<T> collection which contains all the elements of the source sequence cast to the specified type. 
 
+.. code-block:: c#
+   :caption: Cast example
+      ArrayList list = new ArrayList
+      {
+            10,
+            20,
+            30
+      };
+      IEnumerable<int> result = list.Cast<int>();
 
+      
