@@ -43,6 +43,61 @@ Resources are objects which can be reused anywhere in a WPF application. For exa
 2. Dynamic Resource - Dynamic resources are the resources which you can manipulate at runtime and are evaluated at runtime.
                       If your code behind changes the resource, the elements referring resources as dynamic resources will also change.
 
+**Note:** Using Static Resources improves the performance of your WPF application. When you are using Dynamic Resources, make sure that the Element Properties must be Dependency Property.
+This behavior is because, DPs have Change Notification support implicitly implemented, which in turn updates your UI.
+
+**Declare and refer resources in Resource Dictionary**
+
+To add a Resource Dictionary into your WPF application, right click the WPF project > add a Resource Dictionary.
+
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1" x:Key="myBackgroundColor">
+        <GradientStop Offset="0" Color="Green"/>
+        <GradientStop Offset="0.4" Color="PeachPuff"/>
+        <GradientStop Offset="0.7" Color="Pink"/>
+        <GradientStop Offset="1" Color="Silver"/>
+    </LinearGradientBrush>
+    <Thickness x:Key="MarginTop">0 5 5 0</Thickness>  
+    <SolidColorBrush x:Key="SolidAquamarine" Color="Aquamarine"/>
+
+    <SolidColorBrush Color="Red" x:Key="buttonRedBackground"/>
+</ResourceDictionary>
+
+//Usage
+<Button x:Name="SubmitButton"    
+               Background="{StaticResource myBackgroundColor}"    
+               BorderBrush="{StaticResource SolidAquamarine}"
+               Margin="{StaticResource MarginTop}"
+               Content="Submit"    
+               Height="20"    
+               Width="100"/>
+
+<Button Name="Button1" Content="Button - Static Resource" Background="{StaticResource buttonRedBackground}"/>
+
+<Button Name="Button2" Content="Button- Dynamic Resource" Background="{DynamicResource buttonRedBackground}"/>
+
+//Usage 1 
+this.Resources["buttonRedBackground"] = Brushes.Green;
+
+//Usage 2
+
+this.Resources["ButtonExitBackgroundColor"] = new SolidColorBrush(Colors.LightGray);  
+this.Resources["ButtonExitBorderColor"] = new SolidColorBrush(Colors.Black);
+
+Color is not applied on the **ExitButton** at compile-time, as the .NET framework resolves it at runtime.
+
+
+Once you declare the resource dictionary, you can refer them at application level as shown below -
+
+<Application.Resources>
+    <ResourceDictionary>
+        <ResourceDictionary.MergedDictionaries>
+            <ResourceDictionary Source="MyResourcesDictionary.xaml"/>
+        </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+</Application.Resources>
+
 
 **Implicit Styling**
 
@@ -88,6 +143,38 @@ To avoid the problem of overriding the property for some controls, we can use ex
             <Setter Property="Foreground" Value="Black"/>
         </Style>
 
-https://www.dotnetcurry.com/wpf/1142/resources-wpf-static-dynamic-difference#:~:text=Static%20Resource%20%2D%20Static%20resources%20are,during%20the%20loading%20of%20XAML.&text=Dynamic%20Resource%20%2D%20Dynamic%20resources%20are,and%20are%20evaluated%20at%20runtime
+*********
+Templates
+*********
 
-https://www.c-sharpcorner.com/article/static-dynamic-resources-in-wpf/
+A template describes the overall look and visual appearance of a control. For each control, there is a default template associated with it which gives the control its appearance.
+In WPF applications, you can easily create your own templates when you want to customize the visual behavior and visual appearance of a control.
+
+difference between styles and templates are listed below −
+
+* Styles can only change the appearance of your control with default properties of that control.
+
+* With templates, you can access more parts of a control than in styles. You can also specify both existing and new behavior of a control.
+
+Templates are basically of 2 types :
+
+* ControlTemplate
+
+* DataTemplate 
+
+The Control Template defines the visual appearance of a control. All of the UI elements have some kind of appearance as well as behavior, e.g., Button has an appearance and behavior.
+Click event or mouse hover event are the behaviors which are fired in response to a click and hover and there is also a default appearance of button which can be changed by the Control template.
+
+https://www.tutorialspoint.com/wpf/wpf_templates.htm
+
+
+
+
+
+
+
+
+
+
+
+
