@@ -162,10 +162,108 @@ Templates are basically of 2 types :
 
 * DataTemplate 
 
-The Control Template defines the visual appearance of a control. All of the UI elements have some kind of appearance as well as behavior, e.g., Button has an appearance and behavior.
+The **Control Template** defines the visual appearance of a control. All of the UI elements have some kind of appearance as well as behavior, e.g., Button has an appearance and behavior.
 Click event or mouse hover event are the behaviors which are fired in response to a click and hover and there is also a default appearance of button which can be changed by the Control template.
 
-https://www.tutorialspoint.com/wpf/wpf_templates.htm
+//Method 1
+<Button Margin="50" Foreground="Black" Content="Custom" >
+    <Button.Template>
+        <ControlTemplate TargetType="{x:Type Button}">
+            <Grid>
+                <Ellipse Width="210" Height="110"  Fill="Black"/>
+                <Ellipse Width="200" Height="100"  Name="Button" Fill="Brown" />
+                <ContentPresenter HorizontalAlignment="Center"
+                                VerticalAlignment="Center"/>
+            </Grid>
+        </ControlTemplate>
+    </Button.Template>
+</Button>
+
+//Method 2
+<ControlTemplate x:Key = "ButtonTemplate" TargetType = "Button">		
+    <Grid> 
+    <Ellipse x:Name = "ButtonEllipse" Height = "100" Width = "150" > 
+        <Ellipse.Fill> 
+            <LinearGradientBrush StartPoint = "0,0.2" EndPoint = "0.2,1.4"> 
+                <GradientStop Offset = "0" Color = "Red" /> 
+                <GradientStop Offset = "1" Color = "Orange" /> 
+            </LinearGradientBrush> 
+        </Ellipse.Fill> 
+    </Ellipse> 
+        
+    <ContentPresenter Content = "{TemplateBinding Content}" 
+        HorizontalAlignment = "Center" VerticalAlignment = "Center" /> 
+    </Grid> 
+</ControlTemplate>
+
+//Usage 
+<Button Content = "Round Button!"
+         Template = "{StaticResource ButtonTemplate}"/> 
+
+
+A **Data Template** defines and specifies the appearance and structure of a collection of data.
+
+Data Template enables you to customize the appearance of the data objects. It is beneficial when a collection of objects binds with ItemControls like ListView, ListBox,ComboBox.
+
+<Grid>  
+    <ListBox Name="dataTemplate">  
+        <ListBox.ItemTemplate>  
+            <DataTemplate>  
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">  
+                    <Image Source="{Binding CoverImage}" Height="200" Width="150"></Image>  
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">  
+                        <TextBlock Text="{Binding Name}" FontSize="16"></TextBlock>  
+                        <TextBlock Text="{Binding Author}" FontSize="16"></TextBlock>  
+                    </StackPanel>  
+                </StackPanel>  
+            </DataTemplate>  
+        </ListBox.ItemTemplate>  
+    </ListBox>   
+</Grid> 
+
+For proper pictorial presentation of the data objects, we should create ItemsControl with DataTemplate but what if we need to customize the default layout of items?
+In this case *ItemsPanelTemplate* comes into the picture.
+
+ItemsPanelTemplate enables you to customize the panel, which defines the layout of items in ItemControls like ListBox and ListView. Every ItemControl has its default panel.
+
+For example, Default panel for ListBox is VirtualizingStackPanel.
+
+
+Listbox renders all the items vertically aligned one after the other, each item occupying the whole row. This layout can be customized, as shown below.
+
+Add ListBox.ItemsPanel tag and create ItemsPanelTemplate within it.
+
+<ListBox.ItemsPanel>  
+    <ItemsPanelTemplate>  
+        <UniformGrid Columns="3" /> 
+    </ItemsPanelTemplate>  
+</ListBox.ItemsPanel>
+
+.. image:: images/DataTemplate.png
+   :width: 400
+
+**HierarchialDataTemplate**
+
+HierarchialDataTemplate enables you to customize the template of Parent TreeViewItems as well as their Child TreeViewItems.
+
+********
+Triggers
+********
+
+Triggers are used to change the value of any given property, when certain conditions are satisfied.
+So, it allows you to dynamically change the appearance and/or behavior of your control without having to create a new one.
+
+There are three types of triggers −
+
+* Property Triggers
+
+* Data Triggers
+
+* Event Triggers
+
+
+
+
 
 
 
