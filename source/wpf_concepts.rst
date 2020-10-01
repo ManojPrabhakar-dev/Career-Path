@@ -8,18 +8,49 @@ WPF Concepts
 ############
 
 ************
-Data Binding
+Element Tree
 ************
 
-About Data Binding
+Elements and components are ordered in a tree structure so that the programmers can easily handle the object and change the behavior of an application.
 
-*********
-Templates
-*********
+In WPF, there are two ways that a complete object tree is conceptualized −
 
-About Control template and data template
+* Logical Tree Structure
 
-Reference : `Template blog <https://www.c-sharpcorner.com/article/different-types-of-templates-in-wpf/>`_
+* Visual Tree Structure
+
+With the help of these tree structures, you can easily create and identify the relationship between UI elements.
+
+**Logical Tree Structure**
+
+In WPF applications, the structure of the UI elements in XAML represents the logical tree structure.
+
+<StackPanel> 
+    <Button x:Name = "button" Height = "30" Width = "70" Content = "OK" Margin = "20" />     
+    <ListBox x:Name = "listBox" Height = "100" Width = "100" Margin = "20"> 
+        <ListBoxItem Content = "Item 1" /> 
+        <ListBoxItem Content = "Item 2" /> 
+        <ListBoxItem Content = "Item 3" /> 
+    </ListBox>     
+</StackPanel> 
+
+If you look at the XAML code, you will observe a tree structure.
+
+**Visual Tree Structure**
+
+In WPF, the concept of the visual tree describes the structure of visual objects, as represented by the Visual Base Class.
+It signifies all the UI elements which are rendered to the output screen.
+
+When a programmer wants to create a template for a particular control, he is actually rendering the visual tree of that control.
+The visual tree is also very useful for those who want to draw lower level controls for *performance and optimization reasons*.
+
+In WPF applications, visual tree is used for −
+
+* Rendering the visual objects.
+
+* Rendering the layouts.
+
+* The routed events mostly travel along the visual tree, not the logical tree.
 
 *********
 Resources
@@ -260,6 +291,83 @@ There are three types of triggers −
 * Data Triggers
 
 * Event Triggers
+
+
+In **Property Triggers**, when a change occurs in one property, it will bring either an immediate or an animated change in another property.
+For example, you can use a property trigger to change the appearance of a button when the mouse hovers over the button.
+
+<Window.Resources> 
+    <Style x:Key = "TriggerStyle" TargetType = "Button"> 
+        <Setter Property = "Foreground" Value = "Blue" /> 
+        <Style.Triggers> 
+        <Trigger Property = "IsMouseOver" Value = "True"> 
+            <Setter Property = "Foreground" Value = "Green" /> 
+        </Trigger> 
+        </Style.Triggers> 
+    </Style> 
+</Window.Resources> 
+
+<Grid> 
+    <Button Width = "100" Height = "70"
+        Style = "{StaticResource TriggerStyle}" Content = "Trigger"/> 
+</Grid> 
+
+
+**Data Trigger** performs some actions when the bound data satisfies some conditions.
+
+<StackPanel HorizontalAlignment = "Center"> 
+    <CheckBox x:Name = "redColorCheckBox" 
+        Content = "Set red as foreground color" Margin = "20"/> 
+        
+    <TextBlock Name = "txtblock" VerticalAlignment = "Center" 
+        Text = "Event Trigger" FontSize = "24" Margin = "20"> 
+        <TextBlock.Style> 
+        <Style> 
+            <Style.Triggers> 
+                <DataTrigger Binding = "{Binding ElementName = redColorCheckBox, Path = IsChecked}" 
+                    Value = "true"> 
+                    <Setter Property = "TextBlock.Foreground" Value = "Red"/> 
+                    <Setter Property = "TextBlock.Cursor" Value = "Hand" /> 
+                </DataTrigger> 
+            </Style.Triggers> 
+        </Style> 
+        </TextBlock.Style> 
+    </TextBlock>     
+</StackPanel> 
+
+**Event Trigger** performs some actions when a specific event is fired. It is usually used to accomplish some animation on control such DoubleAnumatio, ColorAnimation, etc.
+
+<Grid> 
+    <Button Content = "Click Me" Width = "60" Height = "30">		
+        <Button.Triggers> 
+            <EventTrigger RoutedEvent = "Button.Click"> 
+                <EventTrigger.Actions> 
+                    <BeginStoryboard> 
+                        <Storyboard> 							
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty = 
+                            "Width" Duration = "0:0:2"> 
+                            <LinearDoubleKeyFrame Value = "60" KeyTime = "0:0:0"/> 
+                            <LinearDoubleKeyFrame Value = "120" KeyTime = "0:0:1"/>                            
+                        </DoubleAnimationUsingKeyFrames>								
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty = "Height" 
+                            Duration = "0:0:2"> 
+                            <LinearDoubleKeyFrame Value = "30" KeyTime = "0:0:0"/> 
+                            <LinearDoubleKeyFrame Value = "40" KeyTime = "0:0:1"/>                            
+                        </DoubleAnimationUsingKeyFrames>								
+                        </Storyboard> 
+                    </BeginStoryboard> 
+                </EventTrigger.Actions> 
+            </EventTrigger> 
+        </Button.Triggers> 			
+    </Button> 
+</Grid> 
+
+
+
+
+
+
+
 
 
 
